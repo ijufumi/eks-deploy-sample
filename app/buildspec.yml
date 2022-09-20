@@ -1,0 +1,21 @@
+version: 0.2
+
+env:
+  variables:
+    IMAGE_REPO_NAME: "sample-app"
+
+phases:
+  pre_build:
+    commands:
+      - IMAGE_TAG=$(cat tag.txt)
+      - REPOSITORY_URI=${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}
+  build:
+    commands:
+      - docker build -t ${IMAGE_REPO_NAME}:${IMAGE_TAG} .
+  post_build:
+    commands:
+      - aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com
+      - docker tag ${IMAGE_REPO_NAME}:${IMAGE_TAG} ${REPOSITORY_URI}:${IMAGE_TAG}
+      - docker push ${REPOSITORY_URI}:${IMAGE_TAG}
+      - /bin/bash deploy/apply-image.sh
+      - /bin/bash scripts/notification.sh $?

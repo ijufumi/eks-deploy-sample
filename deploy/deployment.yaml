@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sample-app
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sample-app
+  template:
+    metadata:
+      labels:
+        app: sample-app
+    spec:
+      containers:
+        - name: sample-app
+          image: "0123456789.dkr.ecr.us-east-1.amazonaws.com/sample-app:68bed80"
+          imagePullPolicy: "IfNotPresent"
+          resources:
+            limits:
+              cpu: 256m
+              memory: 256Mi
+            requests:
+              cpu: 256m
+              memory: 256Mi
+          ports:
+            - name: task
+              containerPort: 50051
+          readinessProbe:
+            tcpSocket:
+              port: 50051
+            initialDelaySeconds: 15
+            timeoutSeconds: 2
+          livenessProbe:
+            tcpSocket:
+              port: 50051
+            initialDelaySeconds: 45
+            timeoutSeconds: 2
