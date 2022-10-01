@@ -13,8 +13,8 @@ import yaml
 CODEPIPELINE_NAME = os.getenv("CODEPIPELINE_NAME")
 BUCKET_NAME = os.getenv("BUCKET_NAME")
 ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
-ORGANIZATION_NAME = os.getenv("ORGANIZATION_NAME")
-REPOSITORY_NAME = os.getenv("REPOSITORY_NAME")
+ORGANIZATION_NAME = os.getenv("ORGANIZATION_NAME", "ijufumi")
+REPOSITORY_NAME = os.getenv("REPOSITORY_NAME", "eks-deploy-sample")
 
 
 def get_commit_hash(repository_name: str, ref_name: str) -> str:
@@ -52,14 +52,16 @@ def upload_zip_file(repository_name: str, ref_name: str, use_hash: bool = False)
             zip_file.extractall(directory)
         zip_file_path = f"{directory}/{timestamp}"
 
-        with open(f"{directory}/{zip_root_path}/tag.txt", "w") as tag_file:
+        root_dir=f"{directory}/{zip_root_path}/app"
+        
+        with open(f"{root_dir}/tag.txt", "w") as tag_file:
             if use_hash:
                 commit_hash = get_commit_hash(repository_name, ref_name)
                 tag_file.write(commit_hash[0:7])
             else:
                 tag_file.write(ref_name2)
 
-        shutil.make_archive(base_name=zip_file_path, format="zip", root_dir=f"{directory}/{zip_root_path}")
+        shutil.make_archive(base_name=zip_file_path, format="zip", root_dir=root_dir)
 
         client.upload_file(f"{zip_file_path}.zip", BUCKET_NAME, file_key)
 
