@@ -1,0 +1,21 @@
+name: release
+on:
+  release:
+    types: [published]
+
+env:
+  PIPELINE_ENDPOINT: input-your-endpoint
+jobs:
+  pipeline:
+    name: release
+    runs-on: ubuntu-latest
+    steps:
+      - name: get tag
+        run: echo "TAG=${GITHUB_REF##*/}" >> $GITHUB_ENV
+      - name: install curl
+        run: sudo apt-get install -y curl
+      - name: send request
+        run: |
+          curl -H 'content-type: application/json' \
+          -d "{\"repository\": \"${{ github.repository }}\", \"tag\": \"${{ env.TAG }}\", \"is_webhook\": true}" \
+          ${{ env.PIPELINE_ENDPOINT }}
