@@ -10,12 +10,16 @@
 ## ディレクトリ構成
 
 ```bash
-├── LICENSE
-├── README.md
+.
+├── .github/workflows/release.yaml
 ├── app
 ├── assets
 └── deployments
 ```
+
+### `.github/workflows/release.yaml`
+
+`Code pipeline` を自動で実行するための `GitHub Action` ファイル
 
 ### `app`
 
