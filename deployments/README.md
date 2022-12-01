@@ -1,12 +1,40 @@
-# Welcome to your CDK Go project!
+# 環境作成用のコード
 
-This is a blank project for CDK development with Go.
+## 動かすための前提条件
 
-The `cdk.json` file tells the CDK toolkit how to execute your app.
+以下のコマンドがインストールされていること
 
-## Useful commands
+### `awscli`
 
- * `cdk deploy`      deploy this stack to your default AWS account/region
- * `cdk diff`        compare deployed stack with current state
- * `cdk synth`       emits the synthesized CloudFormation template
- * `go test`         run unit tests
+Mac で `brew` を使っている場合、以下のコマンドでインストール可能。
+
+```bash
+brew install awscli
+```
+
+### `awscdk`
+
+Mac で `brew` を使っている場合、以下のコマンドでインストール可能。
+
+```bash
+brew install aws-cdk
+```
+
+`CDK` の使い方については、 [CDK README](./README.cdk.md) を参照
+
+## このコードで作成するもの
+
+### `VPC`
+
+
+### `Lambda`
+
+
+### `Code pipeline` + `Code build`
+
+
+### `EKS`
+
+
+### `ECR`
+
