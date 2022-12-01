@@ -14,7 +14,7 @@
 ├── README.md
 ├── app
 ├── assets
-└── deploy
+└── deployments
 ```
 
 ### `app`
@@ -23,5 +23,5 @@
 ### `assets`
 
 
-### `deploy`
+### `deployments`
 
