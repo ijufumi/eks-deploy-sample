@@ -6,7 +6,7 @@ import (
 	"github.com/aws/aws-cdk-go/awscdk/v2/awsec2"
 	"github.com/aws/constructs-go/constructs/v10"
 	"github.com/aws/jsii-runtime-go"
-	"github.com/ijufumi/eks-deploy-sample/deploy/pkg/config"
+	"github.com/ijufumi/eks-deploy-sample/deployments/pkg/config"
 )
 
 func CreateVPC(scope constructs.Construct) awsec2.Vpc {
