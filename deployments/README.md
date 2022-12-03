@@ -1,5 +1,37 @@
 # 環境作成用のコード
 
+## ファイル・ディレクトリ構成
+
+```bash
+.
+├── deploy.go
+├── deploy_test.go
+├── lambda
+└── pkg
+    ├── config
+    └── stacks
+```
+
+### `deploy.go`
+
+`CDK` の本体
+
+### `deploy_test.go`
+
+`CDK` のテストファイル
+
+### `labmda`
+
+`Lambda` 用のコード
+
+### `pkg/config`
+
+`CDK` 用の設定
+
+### `pkg/stacks`
+
+各リソースの `Stack` ファイル
+
 ## 動かすための前提条件
 
 以下のコマンドがインストールされていること
