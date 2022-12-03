@@ -16,6 +16,11 @@ type Config struct {
 		Name      string `env:"VPC_NAME"`
 		CidrBlock string `env:"CIDR_BLOCK"`
 	}
+
+	Repository struct {
+		Name string `env:"REPOSITORY_NAME"`
+	}
+
 	Cluster struct {
 		Name  string `env:"CLUSTER_NAME"`
 		Image struct {
