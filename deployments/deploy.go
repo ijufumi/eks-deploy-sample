@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/aws/aws-cdk-go/awscdk/v2"
-	"github.com/ijufumi/eks-deploy-sample/deploy/pkg/config"
+	"github.com/ijufumi/eks-deploy-sample/deployments/pkg/config"
 
 	// "github.com/aws/aws-cdk-go/awscdk/v2/awssqs"
 	"github.com/aws/constructs-go/constructs/v10"

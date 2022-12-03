@@ -1,4 +1,4 @@
-module github.com/ijufumi/eks-deploy-sample/deploy
+module github.com/ijufumi/eks-deploy-sample/deployments
 
 go 1.18
 
