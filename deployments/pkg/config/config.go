@@ -21,6 +21,12 @@ type Config struct {
 		Name string `env:"REPOSITORY_NAME"`
 	}
 
+	Lambda struct {
+		Image struct {
+			File string `env:"LAMBDA_IMAGE_FILE" default:"../lambda"`
+		}
+	}
+
 	Cluster struct {
 		Name  string `env:"CLUSTER_NAME"`
 		Image struct {
