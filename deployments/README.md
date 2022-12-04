@@ -75,3 +75,7 @@ brew install aws-cdk
 ### `ECR`
 
 `EKS` にデプロイする `docker` イメージを格納する `ECR` を作成するための `Stack`
+
+### `Image`
+
+`ECR` に `push` するための `docker` イメージを作成する `Stack`
