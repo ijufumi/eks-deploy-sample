@@ -29,12 +29,10 @@ type Config struct {
 	}
 
 	Cluster struct {
-		Name  string `env:"CLUSTER_NAME"`
-		Image struct {
-			RepositoryName string `env:"CLUSTER_IMAGE_REPOSITORY_NAME"`
-			Tag            string `env:"CLUSTER_IMAGE_TAG"`
-		}
+		Name       string `env:"CLUSTER_NAME"`
+		K8SVersion string `env:"CLUSTER_K8S_VERSION" default:"1.21"`
 	}
+
 	LoadBalancer struct {
 		DomainName     string `env:"LOAD_BALANCER_DOMAIN_NAME"`
 		CertificateArn string `env:"LOAD_BALANCER_CERTIFICATE_ARN"`
