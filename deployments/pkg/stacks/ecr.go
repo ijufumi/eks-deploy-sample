@@ -9,8 +9,7 @@ import (
 	"github.com/ijufumi/eks-deploy-sample/deployments/pkg/config"
 )
 
-func CreateECR(scope constructs.Construct) awsecr.Repository {
-	configuration := config.Load()
+func CreateECR(scope constructs.Construct, configuration config.Config) awsecr.Repository {
 	repositoryID := fmt.Sprintf("id-%s", configuration.Repository.Name)
 	reporitoyProps := awsecr.RepositoryProps{
 		RepositoryName:  jsii.String(configuration.Repository.Name),
