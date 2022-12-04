@@ -5,6 +5,7 @@ import (
 	"os"
 	"path"
 
+	"github.com/aws/aws-cdk-go/awscdk/v2/awsecr"
 	assets "github.com/aws/aws-cdk-go/awscdk/v2/awsecrassets"
 	"github.com/aws/constructs-go/constructs/v10"
 	"github.com/aws/jsii-runtime-go"
@@ -12,7 +13,7 @@ import (
 	"github.com/ijufumi/eks-deploy-sample/deployments/pkg/config"
 )
 
-func CreateImage(scope constructs.Construct, configuration config.Config) {
+func CreateImage(scope constructs.Construct, configuration config.Config, repository awsecr.Repository) assets.DockerImageAsset {
 	current, _ := os.Getwd()
 	imageID := fmt.Sprintf("id-image")
 
@@ -20,5 +21,9 @@ func CreateImage(scope constructs.Construct, configuration config.Config) {
 		File: jsii.String(path.Join(current, configuration.Lambda.Image.File)),
 	}
 
-	imageAssets := assets.NewDockerImageAsset(scope, jsii.String(imageID), &props)
+	imageAsset := assets.NewDockerImageAsset(scope, jsii.String(imageID), &props)
+
+	imageAsset.SetRepository(repository)
+
+	return imageAsset
 }

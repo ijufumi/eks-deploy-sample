@@ -24,6 +24,7 @@ type Config struct {
 	Lambda struct {
 		Image struct {
 			File string `env:"LAMBDA_IMAGE_FILE" default:"../lambda"`
+			Tag  string `env:"LAMBDA_IMAGE_TAG" default:"latest"`
 		}
 	}
 
