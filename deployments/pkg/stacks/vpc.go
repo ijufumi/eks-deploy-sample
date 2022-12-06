@@ -10,7 +10,7 @@ import (
 )
 
 func CreateVPC(scope constructs.Construct, configuration config.Config) awsec2.Vpc {
-	vpcID := fmt.Sprintf("id-%s", configuration.Vpc.Name)
+	vpcID := "vpc-id"
 	subnetConfigurations := []*awsec2.SubnetConfiguration{
 		{
 			Name:       jsii.String(fmt.Sprintf("public-subnet-%s", configuration.Vpc.Name)),

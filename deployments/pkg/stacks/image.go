@@ -1,7 +1,6 @@
 package stacks
 
 import (
-	"fmt"
 	"os"
 	"path"
 
@@ -15,7 +14,7 @@ import (
 
 func CreateImage(scope constructs.Construct, configuration config.Config, repository awsecr.Repository) assets.DockerImageAsset {
 	current, _ := os.Getwd()
-	imageID := fmt.Sprintf("id-image")
+	imageID := "docker-image-id"
 
 	props := assets.DockerImageAssetProps{
 		File: jsii.String(path.Join(current, configuration.Lambda.Image.File)),
