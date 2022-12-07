@@ -31,5 +31,40 @@ func CreateEKS(scope constructs.Construct, configuration config.Config, vpc awse
 
 	cluster := awseks.NewFargateCluster(scope, jsii.String(id), &props)
 
+	appName := jsii.String(configuration.Cluster.App.Name)
+
+	cluster.AddManifest(jsii.String("manifest-1"), &map[string]interface{}{
+		"apiVersion": jsii.String("v1"),
+		"kind":       jsii.String("Namespace"),
+		"metadata": map[string]*string{
+			"name": appName,
+		},
+		"spec": map[string]interface{}{
+			"replica": 1,
+			"selector": map[string]interface{}{
+				"matchLabels": map[string]*string{
+					"app": appName,
+				},
+			},
+			"template": map[string]interface{}{
+				"metadata": map[string]interface{}{
+					"labels": map[string]*string{
+						"app": appName,
+					},
+				},
+				"spec": map[string]interface{}{
+					"containers": []map[string]interface{}{
+						{
+							"name":            appName,
+							"image":           jsii.String(configuration.Cluster.App.Image),
+							"imagePullPolicy": jsii.String("IfNotPresent"),
+							"resources":       map[string]interface{}{},
+						},
+					},
+				},
+			},
+		},
+	})
+
 	return cluster
 }
