@@ -41,6 +41,7 @@ type Config struct {
 		DomainName     string `env:"LOAD_BALANCER_DOMAIN_NAME"`
 		CertificateArn string `env:"LOAD_BALANCER_CERTIFICATE_ARN"`
 	}
+
 	Route53 struct {
 		DomainName string `env:"ROUTE53_DOMAIN_NAME"`
 	}
