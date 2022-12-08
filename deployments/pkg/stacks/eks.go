@@ -58,7 +58,16 @@ func CreateEKS(scope constructs.Construct, configuration config.Config, vpc awse
 							"name":            appName,
 							"image":           jsii.String(configuration.Cluster.App.Image),
 							"imagePullPolicy": jsii.String("IfNotPresent"),
-							"resources":       map[string]interface{}{},
+							"resources": map[string]interface{}{
+								"limits": map[string]*string{
+									"cpu":    jsii.String("256m"),
+									"memory": jsii.String("256Mi"),
+								},
+								"requests": map[string]*string{
+									"cpu":    jsii.String("256m"),
+									"memory": jsii.String("256Mi"),
+								},
+							},
 						},
 					},
 				},
