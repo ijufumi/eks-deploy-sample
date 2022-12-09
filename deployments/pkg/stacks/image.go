@@ -12,7 +12,7 @@ import (
 	"github.com/ijufumi/eks-deploy-sample/deployments/pkg/configs"
 )
 
-func CreateImage(scope constructs.Construct, config configs.Config, repository awsecr.Repository) assets.DockerImageAsset {
+func CreateImage(scope constructs.Construct, config *configs.Config, repository awsecr.Repository) assets.DockerImageAsset {
 	current, _ := os.Getwd()
 	imageID := "docker-image-id"
 

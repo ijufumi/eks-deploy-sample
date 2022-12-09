@@ -10,7 +10,7 @@ import (
 	"github.com/ijufumi/eks-deploy-sample/deployments/pkg/configs"
 )
 
-func CreateEKS(scope constructs.Construct, config configs.Config, vpc awsec2.Vpc) awseks.Cluster {
+func CreateEKS(scope constructs.Construct, config *configs.Config, vpc awsec2.Vpc) awseks.Cluster {
 	// eksTaskRole := awsiam.NewRole(scope, jsii.String("eks-task-role"), &awsiam.RoleProps{
 	// 	AssumedBy: awsiam.NewServicePrincipal(jsii.String("eks.amazonaws.com"), &awsiam.ServicePrincipalOpts{}),
 	// })

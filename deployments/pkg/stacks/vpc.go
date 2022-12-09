@@ -9,7 +9,7 @@ import (
 	"github.com/ijufumi/eks-deploy-sample/deployments/pkg/configs"
 )
 
-func CreateVPC(scope constructs.Construct, config configs.Config) awsec2.Vpc {
+func CreateVPC(scope constructs.Construct, config *configs.Config) awsec2.Vpc {
 	vpcID := "vpc-id"
 	subnetConfigurations := []*awsec2.SubnetConfiguration{
 		{
