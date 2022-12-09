@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/aws/aws-cdk-go/awscdk/v2"
-	"github.com/ijufumi/eks-deploy-sample/deployments/pkg/config"
+	"github.com/ijufumi/eks-deploy-sample/deployments/pkg/configs"
 
 	// "github.com/aws/aws-cdk-go/awscdk/v2/awssqs"
 	"github.com/aws/constructs-go/constructs/v10"
@@ -28,24 +28,24 @@ func main() {
 
 	app := awscdk.NewApp(nil)
 
+	config := configs.Load()
 	NewDeployStack(app, "DeployStack", &DeployStackProps{
 		awscdk.StackProps{
-			Env: env(),
+			Env: env(config),
 		},
 	})
 
 	app.Synth(nil)
 }
 
-func env() *awscdk.Environment {
-	configuration := config.Load()
-	var account = configuration.AwsAccessKeyID
+func env(config *configs.Config) *awscdk.Environment {
+	var account = config.AwsAccessKeyID
 	if len(account) == 0 {
-		account = configuration.CdkDefaultAccount
+		account = config.CdkDefaultAccount
 	}
-	var region = configuration.AwsRegion
+	var region = config.AwsRegion
 	if len(region) == 0 {
-		region = configuration.CdkDefaultRegion
+		region = config.CdkDefaultRegion
 	}
 	return &awscdk.Environment{
 		Account: jsii.String(account),
