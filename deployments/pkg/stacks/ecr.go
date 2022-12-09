@@ -4,13 +4,13 @@ import (
 	"github.com/aws/aws-cdk-go/awscdk/v2/awsecr"
 	"github.com/aws/constructs-go/constructs/v10"
 	"github.com/aws/jsii-runtime-go"
-	"github.com/ijufumi/eks-deploy-sample/deployments/pkg/config"
+	"github.com/ijufumi/eks-deploy-sample/deployments/pkg/configs"
 )
 
-func CreateECR(scope constructs.Construct, configuration config.Config) awsecr.Repository {
+func CreateECR(scope constructs.Construct, config configs.Config) awsecr.Repository {
 	repositoryID := "ecr-repository-id"
 	reporitoyProps := awsecr.RepositoryProps{
-		RepositoryName:  jsii.String(configuration.Repository.Name),
+		RepositoryName:  jsii.String(config.Repository.Name),
 		ImageScanOnPush: jsii.Bool(true),
 	}
 
@@ -18,7 +18,7 @@ func CreateECR(scope constructs.Construct, configuration config.Config) awsecr.R
 
 	lambdaRepositoryID := "lambda-ecr-repository-id"
 	lambdaReporitoyProps := awsecr.RepositoryProps{
-		RepositoryName:  jsii.String(configuration.Lambda.Repository.Name),
+		RepositoryName:  jsii.String(config.Lambda.Repository.Name),
 		ImageScanOnPush: jsii.Bool(true),
 	}
 

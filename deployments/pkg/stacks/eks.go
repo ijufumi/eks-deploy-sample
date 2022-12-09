@@ -7,10 +7,10 @@ import (
 	//	"github.com/aws/aws-cdk-go/awscdk/v2/awsiam"
 	"github.com/aws/constructs-go/constructs/v10"
 	"github.com/aws/jsii-runtime-go"
-	"github.com/ijufumi/eks-deploy-sample/deployments/pkg/config"
+	"github.com/ijufumi/eks-deploy-sample/deployments/pkg/configs"
 )
 
-func CreateEKS(scope constructs.Construct, configuration config.Config, vpc awsec2.Vpc) awseks.Cluster {
+func CreateEKS(scope constructs.Construct, config configs.Config, vpc awsec2.Vpc) awseks.Cluster {
 	// eksTaskRole := awsiam.NewRole(scope, jsii.String("eks-task-role"), &awsiam.RoleProps{
 	// 	AssumedBy: awsiam.NewServicePrincipal(jsii.String("eks.amazonaws.com"), &awsiam.ServicePrincipalOpts{}),
 	// })
@@ -22,8 +22,8 @@ func CreateEKS(scope constructs.Construct, configuration config.Config, vpc awse
 	}
 	id := "eks-cluster-id"
 	props := awseks.FargateClusterProps{
-		Version:     awseks.KubernetesVersion_Of(jsii.String(configuration.Cluster.K8SVersion)),
-		ClusterName: jsii.String(configuration.Cluster.Name),
+		Version:     awseks.KubernetesVersion_Of(jsii.String(config.Cluster.K8SVersion)),
+		ClusterName: jsii.String(config.Cluster.Name),
 		// Role:        eksTaskRole,
 		Vpc:        vpc,
 		VpcSubnets: &subnets,
@@ -31,7 +31,7 @@ func CreateEKS(scope constructs.Construct, configuration config.Config, vpc awse
 
 	cluster := awseks.NewFargateCluster(scope, jsii.String(id), &props)
 
-	appName := jsii.String(configuration.Cluster.App.Name)
+	appName := jsii.String(config.Cluster.App.Name)
 
 	cluster.AddManifest(jsii.String("manifest-1"), &map[string]interface{}{
 		"apiVersion": jsii.String("v1"),
@@ -56,7 +56,7 @@ func CreateEKS(scope constructs.Construct, configuration config.Config, vpc awse
 					"containers": []map[string]interface{}{
 						{
 							"name":            appName,
-							"image":           jsii.String(configuration.Cluster.App.Image),
+							"image":           jsii.String(config.Cluster.App.Image),
 							"imagePullPolicy": jsii.String("IfNotPresent"),
 							"resources": map[string]interface{}{
 								"limits": map[string]*string{
