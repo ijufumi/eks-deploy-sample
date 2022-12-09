@@ -68,6 +68,26 @@ func CreateEKS(scope constructs.Construct, configuration config.Config, vpc awse
 									"memory": jsii.String("256Mi"),
 								},
 							},
+							"ports": []map[string]interface{}{
+								{
+									"name":          jsii.String("task"),
+									"containerPort": jsii.Number(80),
+								},
+							},
+							"readinessProbe": map[string]interface{}{
+								"tcpSocket": map[string]interface{}{
+									"port": jsii.Number(80),
+								},
+								"initialDelaySeconds": jsii.Number(15),
+								"timeoutSeconds":      jsii.Number(2),
+							},
+							"livenessProbe": map[string]interface{}{
+								"tcpSocket": map[string]interface{}{
+									"port": jsii.Number(80),
+								},
+								"initialDelaySeconds": jsii.Number(45),
+								"timeoutSeconds":      jsii.Number(2),
+							},
 						},
 					},
 				},
