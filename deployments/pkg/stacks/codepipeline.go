@@ -10,12 +10,12 @@ import (
 	"github.com/ijufumi/eks-deploy-sample/deployments/pkg/configs"
 )
 
-func CreateCodepipeline(scope constructs.Construct, config *configs.Config) pipeline.Pipeline {
+func CreateCodepipeline(scope constructs.Construct, config *configs.Config, bucket awss3.IBucket) pipeline.Pipeline {
 	sourceOutput := pipeline.NewArtifact(jsii.String("source"))
 	sourceAction := actions.NewS3SourceAction(
 		&actions.S3SourceActionProps{
 			ActionName: jsii.String("Source"),
-			Bucket:     awss3.Bucket_FromBucketName(scope, jsii.String("id-s3-bucket"), jsii.String(config.S3.BucketName)),
+			Bucket:     bucket,
 			BucketKey:  jsii.String("sample.zip"),
 			Output:     sourceOutput,
 		},
