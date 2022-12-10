@@ -75,3 +75,7 @@ brew install aws-cdk
 ### `ECR`
 
 `EKS` にデプロイする `docker` イメージを格納する `ECR` を作成するための `Stack`
+
+### `S3`
+
+`Codepipline` で `Source` のファイルを格納する `bucket` を作成する `Stack`

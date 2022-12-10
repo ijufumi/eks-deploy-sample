@@ -40,6 +40,14 @@ type Config struct {
 		}
 	}
 
+	Pipeline struct {
+		Name string `env:"PIPELINE_NAME" default:"pipeline"`
+	}
+
+	S3 struct {
+		BucketName string `env:"S3_BUCKET_NAME" default:"pipeline_bucket"`
+	}
+
 	LoadBalancer struct {
 		DomainName     string `env:"LOAD_BALANCER_DOMAIN_NAME"`
 		CertificateArn string `env:"LOAD_BALANCER_CERTIFICATE_ARN"`
