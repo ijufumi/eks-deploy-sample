@@ -48,13 +48,10 @@ type Config struct {
 		BucketName string `env:"S3_BUCKET_NAME" default:"pipeline_bucket"`
 	}
 
-	LoadBalancer struct {
-		DomainName     string `env:"LOAD_BALANCER_DOMAIN_NAME"`
-		CertificateArn string `env:"LOAD_BALANCER_CERTIFICATE_ARN"`
-	}
-
-	Route53 struct {
-		DomainName string `env:"ROUTE53_DOMAIN_NAME"`
+	Github struct {
+		OrganizationName string `env:"GITHUB_ORGANIZATION_NAME"`
+		RepositoryName   string `env:"GITHUB_REPOSITORY_NAME"`
+		AccessToken      string `env:"GITHUB_ACCESS_TOKEN"`
 	}
 }
 
