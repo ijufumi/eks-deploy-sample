@@ -75,6 +75,14 @@ brew install aws-cdk
 | `GITHUB_ACCESS_TOKEN` | `Lambda` から `Github` にアクセスするためのトークン |
 | `WEB_HOOK_URL` | `Slack` に通知するための `URL`. 未設定の場合は通知しない |
 
+### `AWS`アカウント
+
+もし、`aws configure` で `profile` が `default` じゃない場合、以下のコマンドを実行する。
+
+```bash
+aws configure --profile [YOUR PROFILE NAME]
+```
+
 ## このコードで作成する `Stack` たち
 
 ### `VPC`
