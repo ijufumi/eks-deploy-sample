@@ -14,15 +14,5 @@ func CreateECR(scope constructs.Construct, config *configs.Config) awsecr.Reposi
 		ImageScanOnPush: jsii.Bool(true),
 	}
 
-	_ = awsecr.NewRepository(scope, jsii.String(repositoryID), &reporitoyProps)
-
-	lambdaRepositoryID := "lambda-ecr-repository-id"
-	lambdaReporitoyProps := awsecr.RepositoryProps{
-		RepositoryName:  jsii.String(config.Lambda.Repository.Name),
-		ImageScanOnPush: jsii.Bool(true),
-	}
-
-	repository := awsecr.NewRepository(scope, jsii.String(lambdaRepositoryID), &lambdaReporitoyProps)
-
-	return repository
+	return awsecr.NewRepository(scope, jsii.String(repositoryID), &reporitoyProps)
 }
