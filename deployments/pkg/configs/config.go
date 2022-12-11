@@ -14,7 +14,7 @@ type Config struct {
 
 	Vpc struct {
 		Name      string `env:"VPC_NAME"`
-		CidrBlock string `env:"CIDR_BLOCK"`
+		CidrBlock string `env:"VPC_CIDR_BLOCK"`
 	}
 
 	Repository struct {
