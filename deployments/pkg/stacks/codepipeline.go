@@ -36,7 +36,7 @@ func CreateCodepipeline(scope constructs.Construct, config *configs.Config, buck
 				"WEB_HOOK_URL": {
 					Value: jsii.String(config.Slack.WebHookURL),
 					Type:  build.BuildEnvironmentVariableType_PLAINTEXT,
-				}
+				},
 			},
 		},
 	)
