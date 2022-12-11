@@ -8,13 +8,10 @@ from datetime import datetime
 
 import boto3
 import requests
-import yaml
 
 CODEPIPELINE_NAME = os.getenv("CODEPIPELINE_NAME")
 BUCKET_NAME = os.getenv("BUCKET_NAME")
 ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
-ORGANIZATION_NAME = os.getenv("ORGANIZATION_NAME", "ijufumi")
-REPOSITORY_NAME = os.getenv("REPOSITORY_NAME", "eks-deploy-sample")
 
 
 def get_commit_hash(repository_name: str, ref_name: str) -> str:
@@ -76,10 +73,6 @@ def lambda_handler(event, context):
     branch_name = request_data.get("branch")
     tag_name = request_data.get("tag")
     ref_name = tag_name if tag_name is not None else branch_name
-
-    if repository_name is None:
-        if ORGANIZATION_NAME is not None and REPOSITORY_NAME is not None:
-            repository_name = f"{ORGANIZATION_NAME}/{REPOSITORY_NAME}"
 
     if repository_name is None or ref_name is None:
         return {"statusCode": 400, "body": "Missing necessary parameters"}
