@@ -32,11 +32,13 @@
 
 各リソースの `Stack` ファイル
 
-## 動かすための前提条件
+## セットアップ
+
+### 必要なコマンド
 
 以下のコマンドがインストールされていること
 
-### `awscli`
+#### `awscli`
 
 Mac で `brew` を使っている場合、以下のコマンドでインストール可能。
 
@@ -44,7 +46,7 @@ Mac で `brew` を使っている場合、以下のコマンドでインスト�
 brew install awscli
 ```
 
-### `awscdk`
+#### `awscdk`
 
 Mac で `brew` を使っている場合、以下のコマンドでインストール可能。
 
@@ -53,6 +55,25 @@ brew install aws-cdk
 ```
 
 `CDK` の使い方については、 [CDK README](./README.cdk.md) を参照
+
+### `.env` ファイル
+
+`.env.example` をコピーして `.env` を作成し、以下の内容を記述する
+
+| 項目 | 説明 |
+| ---- | ---- |
+| `VPC_CIDR_BLOCK` | `VPC` に設定する `CIDR` |
+| `VPC_NAME` | `VPC` に設定する名前 |
+| `REPOSITORY_NAME` | `ECR` の名前 |
+| `LAMBDA_IMAGE_FILE` | `Lambda` 用の `docker` イメージ |
+| `CLUSTER_NAME` | `EKS` の名前 |
+| `CLUSTER_K8S_VERSION` | `EKS` に設定する `Kubernetes` のバージョン |
+| `CLUSTER_APP_NAME` | `EKS` にデプロイする `app` の名前 |
+| `CLUSTER_APP_IMAGE` | `EkS` にデプロイする最初の `docker` イメージ |
+| `PIPELINE_NAME` | `Codepipeline` の名前 |
+| `S3_BUCKET_NAME` | `S3` バケットの名前 |
+| `GITHUB_ACCESS_TOKEN` | `Lambda` から `Github` にアクセスするためのトークン |
+| `WEB_HOOK_URL` | `Slack` に通知するための `URL`. 未設定の場合は通知しない |
 
 ## このコードで作成する `Stack` たち
 
