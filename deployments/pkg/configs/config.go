@@ -53,6 +53,10 @@ type Config struct {
 		RepositoryName   string `env:"GITHUB_REPOSITORY_NAME"`
 		AccessToken      string `env:"GITHUB_ACCESS_TOKEN"`
 	}
+
+	Slack struct {
+		WebHookURL string `env:"WEB_HOOK_URL"`
+	}
 }
 
 // Load returns configuration made from environment variables

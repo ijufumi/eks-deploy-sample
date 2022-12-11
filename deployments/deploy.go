@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/aws/aws-cdk-go/awscdk/v2"
 	"github.com/ijufumi/eks-deploy-sample/deployments/pkg/configs"
+	"github.com/ijufumi/eks-deploy-sample/deployments/pkg/stacks"
 
 	// "github.com/aws/aws-cdk-go/awscdk/v2/awssqs"
 	"github.com/aws/constructs-go/constructs/v10"
@@ -13,12 +14,19 @@ type DeployStackProps struct {
 	awscdk.StackProps
 }
 
-func NewDeployStack(scope constructs.Construct, id string, props *DeployStackProps) awscdk.Stack {
+func NewDeployStack(scope constructs.Construct, id string, props *DeployStackProps, config *configs.Config) awscdk.Stack {
 	var sprops awscdk.StackProps
 	if props != nil {
 		sprops = props.StackProps
 	}
 	stack := awscdk.NewStack(scope, &id, &sprops)
+
+	vpc := stacks.CreateVPC(stack, config)
+	s3 := stacks.CreateS3(stack, config)
+	_ = stacks.CreateECR(stack, config)
+	eks := stacks.CreateEKS(stack, config, vpc)
+	_ = stacks.CreateCodepipeline(stack, config, s3)
+	_ = stacks.CreateLambda(stack, config)
 
 	return stack
 }
@@ -33,7 +41,7 @@ func main() {
 		awscdk.StackProps{
 			Env: env(config),
 		},
-	})
+	}, config)
 
 	app.Synth(nil)
 }

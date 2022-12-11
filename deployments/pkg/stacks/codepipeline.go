@@ -28,6 +28,16 @@ func CreateCodepipeline(scope constructs.Construct, config *configs.Config, buck
 			ActionName: jsii.String("build"),
 			Input:      sourceOutput,
 			Project:    buildProject,
+			EnvironmentVariables: &map[string]*build.BuildEnvironmentVariable{
+				"IMAGE_REPO_NAME": {
+					Value: jsii.String(config.Repository.Name),
+					Type:  build.BuildEnvironmentVariableType_PLAINTEXT,
+				},
+				"WEB_HOOK_URL": {
+					Value: jsii.String(config.Slack.WebHookURL),
+					Type:  build.BuildEnvironmentVariableType_PLAINTEXT,
+				}
+			},
 		},
 	)
 
