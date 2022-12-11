@@ -25,8 +25,6 @@ func CreateLambda(scope constructs.Construct, config *configs.Config) awslambda.
 		Environment: &map[string]*string{
 			"CODEPIPELINE_NAME": jsii.String(config.Pipeline.Name),
 			"BUCKET_NAME":       jsii.String(config.S3.BucketName),
-			"ORGANIZATION_NAME": jsii.String(config.Github.OrganizationName),
-			"REPOSITORY_NAME":   jsii.String(config.Github.RepositoryName),
 			"ACCESS_TOKEN":      jsii.String(config.Github.AccessToken),
 		},
 	}
