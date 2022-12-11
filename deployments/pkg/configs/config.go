@@ -49,9 +49,7 @@ type Config struct {
 	}
 
 	Github struct {
-		OrganizationName string `env:"GITHUB_ORGANIZATION_NAME"`
-		RepositoryName   string `env:"GITHUB_REPOSITORY_NAME"`
-		AccessToken      string `env:"GITHUB_ACCESS_TOKEN"`
+		AccessToken string `env:"GITHUB_ACCESS_TOKEN"`
 	}
 
 	Slack struct {
