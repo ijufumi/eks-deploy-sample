@@ -46,6 +46,11 @@ func CreateCodepipeline(scope constructs.Construct, config *configs.Config, buck
 			StageName: jsii.String("Source"),
 			Actions: &[]pipeline.IAction{
 				sourceAction,
+			},
+		},
+		{
+			StageName: jsii.String("Build"),
+			Actions: &[]pipeline.IAction{
 				buildAction,
 			},
 		},
