@@ -83,6 +83,14 @@ brew install aws-cdk
 aws configure --profile [YOUR PROFILE NAME]
 ```
 
+### public aws ecr へのログイン
+
+`--region` で指定している `ap-northeast-1` は、各自のリージョンを指定
+
+```bash
+aws ecr-public get-login-password --region ap-northeast-1 | docker login --username AWS --password-stdin public.ecr.aws
+```
+
 ## このコードで作成する `Stack` たち
 
 ### `VPC`
