@@ -1,6 +1,7 @@
 package stacks
 
 import (
+	"github.com/aws/aws-cdk-go/awscdk/v2"
 	"github.com/aws/aws-cdk-go/awscdk/v2/awsecr"
 	"github.com/aws/constructs-go/constructs/v10"
 	"github.com/aws/jsii-runtime-go"
@@ -12,6 +13,7 @@ func CreateECR(scope constructs.Construct, config *configs.Config) awsecr.Reposi
 	reporitoyProps := awsecr.RepositoryProps{
 		RepositoryName:  jsii.String(config.Repository.Name),
 		ImageScanOnPush: jsii.Bool(true),
+		RemovalPolicy:   awscdk.RemovalPolicy_DESTROY,
 	}
 
 	return awsecr.NewRepository(scope, jsii.String(repositoryID), &reporitoyProps)
