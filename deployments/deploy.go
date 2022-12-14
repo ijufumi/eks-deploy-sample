@@ -21,12 +21,19 @@ func NewDeployStack(scope constructs.Construct, id string, props *DeployStackPro
 	}
 	stack := awscdk.NewStack(scope, &id, &sprops)
 
+	// Create stacks
 	vpc := stacks.CreateVPC(stack, config)
 	s3 := stacks.CreateS3(stack, config)
 	_ = stacks.CreateECR(stack, config)
 	_ = stacks.CreateEKS(stack, config, vpc)
 	_ = stacks.CreateCodepipeline(stack, config, s3)
-	_ = stacks.CreateLambda(stack, config)
+	lambda := stacks.CreateLambda(stack, config)
+
+	// Output results
+	awscdk.NewCfnOutput(stack, jsii.String("id-output-labmda"), &awscdk.CfnOutputProps{
+		Value:      lambda.FunctionName(),
+		ExportName: jsii.String("LABMDA_FUNCTION_URL"),
+	})
 
 	return stack
 }

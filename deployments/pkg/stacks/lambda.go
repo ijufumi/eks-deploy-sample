@@ -31,6 +31,9 @@ func CreateLambda(scope constructs.Construct, config *configs.Config) awslambda.
 
 	id := jsii.String("id-lambda")
 	lambdaFunction := awslambda.NewDockerImageFunction(scope, id, props)
+	lambdaFunction.AddFunctionUrl(&awslambda.FunctionUrlOptions{
+		AuthType: awslambda.FunctionUrlAuthType_NONE,
+	})
 
 	return lambdaFunction
 }
