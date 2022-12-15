@@ -32,7 +32,7 @@ func NewDeployStack(scope constructs.Construct, id string, props *DeployStackPro
 	// Output results
 	awscdk.NewCfnOutput(stack, jsii.String("id-output-labmda"), &awscdk.CfnOutputProps{
 		Value:      lambda.FunctionName(),
-		ExportName: jsii.String("LABMDA_FUNCTION_URL"),
+		ExportName: jsii.String("labmda-function-url"),
 	})
 
 	return stack
