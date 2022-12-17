@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/aws/aws-cdk-go/awscdk/v2"
 	"github.com/ijufumi/eks-deploy-sample/deployments/pkg/configs"
 	"github.com/ijufumi/eks-deploy-sample/deployments/pkg/stacks"
@@ -34,6 +36,8 @@ func NewDeployStack(scope constructs.Construct, id string, props *DeployStackPro
 		Value:      lambda.FunctionName(),
 		ExportName: jsii.String("labmda-function-url"),
 	})
+
+	fmt.Printf("labmda-function-url is %s", *lambda.FunctionName())
 
 	return stack
 }
