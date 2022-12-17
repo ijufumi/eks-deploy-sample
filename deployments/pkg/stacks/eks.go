@@ -35,7 +35,7 @@ func CreateEKS(scope constructs.Construct, config *configs.Config, vpc awsec2.Vp
 
 	cluster.AddManifest(jsii.String("manifest-1"), &map[string]interface{}{
 		"apiVersion": jsii.String("apps/v1"),
-		"kind":       jsii.String("Namespace"),
+		"kind":       jsii.String("Deployment"),
 		"metadata": map[string]*string{
 			"name": appName,
 		},
