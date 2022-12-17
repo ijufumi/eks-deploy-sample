@@ -40,7 +40,7 @@ func CreateEKS(scope constructs.Construct, config *configs.Config, vpc awsec2.Vp
 			"name": appName,
 		},
 		"spec": map[string]interface{}{
-			"replica": jsii.Number(1),
+			"replicas": jsii.Number(1),
 			"selector": map[string]interface{}{
 				"matchLabels": map[string]*string{
 					"app": appName,
