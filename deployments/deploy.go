@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/aws/aws-cdk-go/awscdk/v2"
 	"github.com/ijufumi/eks-deploy-sample/deployments/pkg/configs"
 	"github.com/ijufumi/eks-deploy-sample/deployments/pkg/stacks"
@@ -27,7 +25,7 @@ func NewDeployStack(scope constructs.Construct, id string, props *DeployStackPro
 	vpc := stacks.CreateVPC(stack, config)
 	s3 := stacks.CreateS3(stack, config)
 	_ = stacks.CreateECR(stack, config)
-	cluster := stacks.CreateEKS(stack, config, vpc)
+	_ = stacks.CreateEKS(stack, config, vpc)
 	_ = stacks.CreateCodepipeline(stack, config, s3)
 	lambda := stacks.CreateLambda(stack, config)
 
@@ -36,9 +34,6 @@ func NewDeployStack(scope constructs.Construct, id string, props *DeployStackPro
 		Value:      lambda.FunctionName(),
 		ExportName: jsii.String("labmda-function-url"),
 	})
-
-	fmt.Printf("labmda-function-url is %s", *lambda.FunctionName())
-	fmt.Printf("alb-endpoint-url is %s", *cluster.AlbController().ToString())
 
 	return stack
 }
