@@ -27,12 +27,14 @@ func CreateEKS(scope constructs.Construct, config *configs.Config, vpc awsec2.Vp
 		// Role:        eksTaskRole,
 		Vpc:        vpc,
 		VpcSubnets: &subnets,
-		AlbController: &awseks.AlbControllerOptions{
-			Version: awseks.AlbControllerVersion_V2_4_1(),
-		},
 	}
 
 	cluster := awseks.NewFargateCluster(scope, jsii.String(id), &props)
+
+	alb := awseks.NewAlbController(scope, jsii.String("id-alb"), &awseks.AlbControllerProps{
+		Version: awseks.AlbControllerVersion_V2_4_1(),
+		Cluster: cluster,
+	})
 
 	appName := jsii.String(config.Cluster.App.Name)
 
@@ -98,7 +100,7 @@ func CreateEKS(scope constructs.Construct, config *configs.Config, vpc awsec2.Vp
 		},
 	})
 
-	manifest.Node().AddDependency(cluster.AlbController())
+	manifest.Node().AddDependency(alb)
 
 	return cluster
 }
