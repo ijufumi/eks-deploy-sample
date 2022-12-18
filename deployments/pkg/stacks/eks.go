@@ -98,7 +98,7 @@ func CreateEKS(scope constructs.Construct, config *configs.Config, vpc awsec2.Vp
 		},
 	})
 
-	manifest.Node().AddDependency(cluster.AlbController)
+	manifest.Node().AddDependency(cluster.AlbController())
 
 	return cluster
 }
