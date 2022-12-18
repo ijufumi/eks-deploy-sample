@@ -27,7 +27,7 @@ func NewDeployStack(scope constructs.Construct, id string, props *DeployStackPro
 	vpc := stacks.CreateVPC(stack, config)
 	s3 := stacks.CreateS3(stack, config)
 	_ = stacks.CreateECR(stack, config)
-	_ = stacks.CreateEKS(stack, config, vpc)
+	cluster := stacks.CreateEKS(stack, config, vpc)
 	_ = stacks.CreateCodepipeline(stack, config, s3)
 	lambda := stacks.CreateLambda(stack, config)
 
@@ -38,6 +38,7 @@ func NewDeployStack(scope constructs.Construct, id string, props *DeployStackPro
 	})
 
 	fmt.Printf("labmda-function-url is %s", *lambda.FunctionName())
+	fmt.Printf("alb-endpoint-url is %s", *cluster.AlbController().ToString())
 
 	return stack
 }
