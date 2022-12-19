@@ -31,14 +31,9 @@ func CreateEKS(scope constructs.Construct, config *configs.Config, vpc awsec2.Vp
 
 	cluster := awseks.NewFargateCluster(scope, jsii.String(id), &props)
 
-	alb := awseks.NewAlbController(scope, jsii.String("id-alb"), &awseks.AlbControllerProps{
-		Version: awseks.AlbControllerVersion_V2_4_1(),
-		Cluster: cluster,
-	})
-
 	appName := jsii.String(config.Cluster.App.Name)
 
-	manifest := cluster.AddManifest(jsii.String("manifest-1"), &map[string]interface{}{
+	cluster.AddManifest(jsii.String("id-app-manifest"), &map[string]interface{}{
 		"apiVersion": jsii.String("apps/v1"),
 		"kind":       jsii.String("Deployment"),
 		"metadata": map[string]*string{
@@ -100,7 +95,26 @@ func CreateEKS(scope constructs.Construct, config *configs.Config, vpc awsec2.Vp
 		},
 	})
 
-	manifest.Node().AddDependency(alb)
+	cluster.AddManifest(jsii.String("id-app-manifest"), &map[string]interface{}{
+		"apiVersion": jsii.String("v1"),
+		"kind":       jsii.String("Service"),
+		"metadata": map[string]*string{
+			"name": jsii.String("service"),
+		},
+		"spec": map[string]interface{}{
+			"type": jsii.String("LoadBalancer"),
+			"selector": map[string]string{
+				"app": *jsii.String(config.Cluster.App.Name),
+			},
+			"ports": []map[string]interface{}{
+				{
+					"protocol":   jsii.String("TCP"),
+					"port":       jsii.Number(80),
+					"targetPort": jsii.Number(80),
+				},
+			},
+		},
+	})
 
 	return cluster
 }
