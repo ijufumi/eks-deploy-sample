@@ -60,12 +60,12 @@ func CreateEKS(scope constructs.Construct, config *configs.Config, vpc awsec2.Vp
 							"imagePullPolicy": jsii.String("IfNotPresent"),
 							"resources": map[string]interface{}{
 								"limits": map[string]*string{
-									"cpu":    jsii.String("256m"),
-									"memory": jsii.String("256Mi"),
+									"cpu":    jsii.String("128m"),
+									"memory": jsii.String("128Mi"),
 								},
 								"requests": map[string]*string{
-									"cpu":    jsii.String("256m"),
-									"memory": jsii.String("256Mi"),
+									"cpu":    jsii.String("128m"),
+									"memory": jsii.String("128Mi"),
 								},
 							},
 							"ports": []map[string]interface{}{
@@ -103,8 +103,8 @@ func CreateEKS(scope constructs.Construct, config *configs.Config, vpc awsec2.Vp
 		},
 		"spec": map[string]interface{}{
 			"type": jsii.String("LoadBalancer"),
-			"selector": map[string]string{
-				"app": *jsii.String(config.Cluster.App.Name),
+			"selector": map[string]*string{
+				"app": appName,
 			},
 			"ports": []map[string]interface{}{
 				{
