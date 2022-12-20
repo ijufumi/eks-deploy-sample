@@ -98,8 +98,13 @@ func CreateEKS(scope constructs.Construct, config *configs.Config, vpc awsec2.Vp
 	cluster.AddManifest(jsii.String("id-service-manifest"), &map[string]interface{}{
 		"apiVersion": jsii.String("v1"),
 		"kind":       jsii.String("Service"),
-		"metadata": map[string]*string{
+		"metadata": map[string]interface{}{
 			"name": jsii.String("service"),
+			"annotations": map[string]*string{
+				"service.beta.kubernetes.io/aws-load-balancer-type":            jsii.String("external"),
+				"service.beta.kubernetes.io/aws-load-balancer-nlb-target-type": jsii.String("ip"),
+				"service.beta.kubernetes.io/aws-load-balancer-scheme":          jsii.String("internet-facing"),
+			},
 		},
 		"spec": map[string]interface{}{
 			"type": jsii.String("LoadBalancer"),
