@@ -103,7 +103,6 @@ func CreateEKS(scope constructs.Construct, config *configs.Config, vpc awsec2.Vp
 			"annotations": map[string]*string{
 				"service.beta.kubernetes.io/aws-load-balancer-type":            jsii.String("external"),
 				"service.beta.kubernetes.io/aws-load-balancer-nlb-target-type": jsii.String("ip"),
-				"service.beta.kubernetes.io/aws-load-balancer-scheme":          jsii.String("internet-facing"),
 			},
 		},
 		"spec": map[string]interface{}{
