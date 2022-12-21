@@ -80,6 +80,10 @@ func CreateCodepipeline(scope constructs.Construct, config *configs.Config, buck
 					Value: cluster.Env().Region,
 					Type:  build.BuildEnvironmentVariableType_PLAINTEXT,
 				},
+				"EKS_CLUSTER_ROLE": {
+					Value: cluster.Role().RoleArn(),
+					Type:  build.BuildEnvironmentVariableType_PLAINTEXT,
+				},
 			},
 		},
 	)
