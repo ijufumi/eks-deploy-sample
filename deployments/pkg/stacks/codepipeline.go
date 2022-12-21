@@ -14,6 +14,14 @@ import (
 )
 
 func CreateCodepipeline(scope constructs.Construct, config *configs.Config, bucket awss3.IBucket) pipeline.Pipeline {
+	sourceRole := awsiam.NewRole(scope, jsii.String("codepipeline-source-role"), &awsiam.RoleProps{
+		AssumedBy: awsiam.NewServicePrincipal(jsii.String("codepipeline.amazonaws.com"), &awsiam.ServicePrincipalOpts{}),
+	})
+	sourceRole.AddToPolicy(awsiam.NewPolicyStatement(&awsiam.PolicyStatementProps{
+		Actions:   jsii.Strings("s3:Get*", "s3:List*"),
+		Resources: jsii.Strings(*bucket.BucketArn(), *jsii.String(fmt.Sprintf("%s/*", *bucket.BucketArn()))),
+	}))
+
 	sourceOutput := pipeline.NewArtifact(jsii.String("source"))
 	sourceAction := actions.NewS3SourceAction(
 		&actions.S3SourceActionProps{
@@ -21,6 +29,7 @@ func CreateCodepipeline(scope constructs.Construct, config *configs.Config, buck
 			Bucket:     bucket,
 			BucketKey:  jsii.String("sample.zip"),
 			Output:     sourceOutput,
+			Role:       sourceRole,
 		},
 	)
 
