@@ -42,6 +42,11 @@ func CreateCodepipeline(scope constructs.Construct, config *configs.Config, buck
 	}))
 	buildProject := build.NewPipelineProject(scope, jsii.String("id-codebuild"), &build.PipelineProjectProps{
 		Role: buildRole,
+		Environment: &build.BuildEnvironment{
+			Privileged:  jsii.Bool(true),
+			BuildImage:  build.LinuxArmBuildImage_AMAZON_LINUX_2_STANDARD_2_0(),
+			ComputeType: build.ComputeType_MEDIUM,
+		},
 	})
 
 	buildAction := actions.NewCodeBuildAction(
