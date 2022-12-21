@@ -25,8 +25,8 @@ func NewDeployStack(scope constructs.Construct, id string, props *DeployStackPro
 	vpc := stacks.CreateVPC(stack, config)
 	s3 := stacks.CreateS3(stack, config)
 	_ = stacks.CreateECR(stack, config)
-	_ = stacks.CreateEKS(stack, config, vpc)
-	pipeline := stacks.CreateCodepipeline(stack, config, s3)
+	cluster := stacks.CreateEKS(stack, config, vpc)
+	pipeline := stacks.CreateCodepipeline(stack, config, s3, cluster)
 	lambda := stacks.CreateLambda(stack, config, s3, pipeline)
 
 	// Output results

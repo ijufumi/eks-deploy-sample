@@ -6,6 +6,7 @@ import (
 	build "github.com/aws/aws-cdk-go/awscdk/v2/awscodebuild"
 	pipeline "github.com/aws/aws-cdk-go/awscdk/v2/awscodepipeline"
 	actions "github.com/aws/aws-cdk-go/awscdk/v2/awscodepipelineactions"
+	"github.com/aws/aws-cdk-go/awscdk/v2/awseks"
 	"github.com/aws/aws-cdk-go/awscdk/v2/awsiam"
 	"github.com/aws/aws-cdk-go/awscdk/v2/awss3"
 	"github.com/aws/constructs-go/constructs/v10"
@@ -13,7 +14,7 @@ import (
 	"github.com/ijufumi/eks-deploy-sample/deployments/pkg/configs"
 )
 
-func CreateCodepipeline(scope constructs.Construct, config *configs.Config, bucket awss3.IBucket) pipeline.Pipeline {
+func CreateCodepipeline(scope constructs.Construct, config *configs.Config, bucket awss3.IBucket, cluster awseks.Cluster) pipeline.Pipeline {
 	sourceRole := awsiam.NewRole(scope, jsii.String("codepipeline-source-role"), &awsiam.RoleProps{
 		AssumedBy: awsiam.NewServicePrincipal(jsii.String("codepipeline.amazonaws.com"), &awsiam.ServicePrincipalOpts{}),
 	})
@@ -65,6 +66,14 @@ func CreateCodepipeline(scope constructs.Construct, config *configs.Config, buck
 				},
 				"AWS_ACCOUNT_ID": {
 					Value: jsii.String(config.AwsAccessKeyID),
+					Type:  build.BuildEnvironmentVariableType_PLAINTEXT,
+				},
+				"EKS_CLUSTER_NAME": {
+					Value: cluster.ClusterName(),
+					Type:  build.BuildEnvironmentVariableType_PLAINTEXT,
+				},
+				"EKS_CLUSTER_REGION": {
+					Value: cluster.Env().Region,
 					Type:  build.BuildEnvironmentVariableType_PLAINTEXT,
 				},
 			},
