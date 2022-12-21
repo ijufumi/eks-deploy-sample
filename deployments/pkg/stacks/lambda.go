@@ -4,6 +4,7 @@ import (
 	"os"
 	"path"
 
+	"github.com/aws/aws-cdk-go/awscdk/v2"
 	"github.com/aws/aws-cdk-go/awscdk/v2/awsecrassets"
 	"github.com/aws/aws-cdk-go/awscdk/v2/awslambda"
 	"github.com/aws/constructs-go/constructs/v10"
@@ -27,6 +28,7 @@ func CreateLambda(scope constructs.Construct, config *configs.Config) awslambda.
 			"BUCKET_NAME":       jsii.String(config.S3.BucketName),
 			"ACCESS_TOKEN":      jsii.String(config.Github.AccessToken),
 		},
+		Timeout: awscdk.Duration_Hours(jsii.Number(config.Lambda.TimeoutHours)),
 	}
 
 	id := jsii.String("id-lambda")
