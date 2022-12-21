@@ -33,7 +33,16 @@ func CreateCodepipeline(scope constructs.Construct, config *configs.Config, buck
 		},
 	)
 
-	buildProject := build.NewPipelineProject(scope, jsii.String("id-codebuild"), &build.PipelineProjectProps{})
+	buildRole := awsiam.NewRole(scope, jsii.String("codepipeline-source-role"), &awsiam.RoleProps{
+		AssumedBy: awsiam.NewServicePrincipal(jsii.String("codepipeline.amazonaws.com"), &awsiam.ServicePrincipalOpts{}),
+	})
+	buildRole.AddToPolicy(awsiam.NewPolicyStatement(&awsiam.PolicyStatementProps{
+		Actions:   jsii.Strings("ecr:*"),
+		Resources: jsii.Strings("*"),
+	}))
+	buildProject := build.NewPipelineProject(scope, jsii.String("id-codebuild"), &build.PipelineProjectProps{
+		Role: buildRole,
+	})
 
 	buildAction := actions.NewCodeBuildAction(
 		&actions.CodeBuildActionProps{
