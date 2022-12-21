@@ -34,6 +34,17 @@ func CreateLambda(scope constructs.Construct, config *configs.Config, s3 awss3.I
 		Actions:   jsii.Strings("codepipeline:UpdatePipeline", "codepipeline:ListPipelines", "codepipeline:GetPipeline"),
 		Resources: jsii.Strings(*pipeline.PipelineArn(), *jsii.String(fmt.Sprintf("%s/*", *pipeline.PipelineArn()))),
 	}))
+	role.AddToPolicy(awsiam.NewPolicyStatement(&awsiam.PolicyStatementProps{
+		Actions:   jsii.Strings("iam:PassRole"),
+		Resources: jsii.Strings("*"),
+		Conditions: &map[string]interface{}{
+			"StringEquals": map[string]interface{}{
+				"iam:PassedToService": []string{
+					"codepipeline.amazonaws.com",
+				},
+			},
+		},
+	}))
 
 	props := &awslambda.DockerImageFunctionProps{
 		Code: awslambda.DockerImageCode_FromImageAsset(
