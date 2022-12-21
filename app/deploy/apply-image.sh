@@ -9,11 +9,11 @@ declare count=0
 while [ $exit_flag -eq -1 ];
 do
     sleep 30
-    results=`kubectl get pod --selector=app=main-task -o jsonpath="{.items[*].spec.containers[*].image}@{..phase}" | tr -s '[[:space:]]' '\n'`
+    results=`kubectl get pod --selector=app=app -o jsonpath="{.items[*].spec.containers[*].image}@{..phase}" | tr -s '[[:space:]]' '\n'`
     for result in $results
     do
         echo $result
-        images=(${result/@/ }
+        images=(${result/@/ })
         if [ "${images[0]}" == "${IMAGE_PATH}" ]; then
             if [ "${images[1]}" == "Running" ]; then
                 exit_flag=0
