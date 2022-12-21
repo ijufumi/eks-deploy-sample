@@ -31,7 +31,7 @@ func CreateLambda(scope constructs.Construct, config *configs.Config, s3 awss3.I
 		Resources: jsii.Strings(*s3.BucketArn(), *jsii.String(fmt.Sprintf("%s/*", *s3.BucketArn()))),
 	}))
 	role.AddToPolicy(awsiam.NewPolicyStatement(&awsiam.PolicyStatementProps{
-		Actions:   jsii.Strings("codepipeline:UpdatePipeline", "codepipeline:ListPipelines", "codepipeline:GetPipeline"),
+		Actions:   jsii.Strings("codepipeline:UpdatePipeline", "codepipeline:ListPipelines", "codepipeline:GetPipeline", "codepipeline:StartPipelineExecution"),
 		Resources: jsii.Strings(*pipeline.PipelineArn(), *jsii.String(fmt.Sprintf("%s/*", *pipeline.PipelineArn()))),
 	}))
 	role.AddToPolicy(awsiam.NewPolicyStatement(&awsiam.PolicyStatementProps{
