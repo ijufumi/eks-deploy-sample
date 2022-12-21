@@ -59,7 +59,7 @@ func CreateCodepipeline(scope constructs.Construct, config *configs.Config, buck
 		},
 	}
 
-	role := awsiam.NewRole(scope, jsii.String("lambda-role"), &awsiam.RoleProps{
+	role := awsiam.NewRole(scope, jsii.String("codepipeline-role"), &awsiam.RoleProps{
 		AssumedBy: awsiam.NewServicePrincipal(jsii.String("codepipeline.amazonaws.com"), &awsiam.ServicePrincipalOpts{}),
 	})
 	role.AddToPolicy(awsiam.NewPolicyStatement(&awsiam.PolicyStatementProps{
