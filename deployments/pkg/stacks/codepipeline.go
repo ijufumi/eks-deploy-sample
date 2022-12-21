@@ -58,6 +58,10 @@ func CreateCodepipeline(scope constructs.Construct, config *configs.Config, buck
 					Value: jsii.String(config.Slack.WebHookURL),
 					Type:  build.BuildEnvironmentVariableType_PLAINTEXT,
 				},
+				"AWS_ACCOUNT_ID": {
+					Value: jsii.String(config.AwsAccessKeyID),
+					Type:  build.BuildEnvironmentVariableType_PLAINTEXT,
+				},
 			},
 		},
 	)
