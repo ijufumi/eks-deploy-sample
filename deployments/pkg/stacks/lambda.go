@@ -32,7 +32,7 @@ func CreateLambda(scope constructs.Construct, config *configs.Config, s3 awss3.I
 	}))
 	role.AddToPolicy(awsiam.NewPolicyStatement(&awsiam.PolicyStatementProps{
 		Actions:   jsii.Strings("codepipeline:UpdatePipeline", "codepipeline:ListPipelines", "codepipeline:GetPipeline"),
-		Resources: jsii.Strings(*pipeline.PipelineArn()),
+		Resources: jsii.Strings(*pipeline.PipelineArn(), *jsii.String(fmt.Sprintf("%s/*", *pipeline.PipelineArn()))),
 	}))
 
 	props := &awslambda.DockerImageFunctionProps{
