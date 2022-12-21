@@ -1,9 +1,12 @@
 package stacks
 
 import (
+	"fmt"
+
 	build "github.com/aws/aws-cdk-go/awscdk/v2/awscodebuild"
 	pipeline "github.com/aws/aws-cdk-go/awscdk/v2/awscodepipeline"
 	actions "github.com/aws/aws-cdk-go/awscdk/v2/awscodepipelineactions"
+	"github.com/aws/aws-cdk-go/awscdk/v2/awsiam"
 	"github.com/aws/aws-cdk-go/awscdk/v2/awss3"
 	"github.com/aws/constructs-go/constructs/v10"
 	"github.com/aws/jsii-runtime-go"
@@ -56,9 +59,18 @@ func CreateCodepipeline(scope constructs.Construct, config *configs.Config, buck
 		},
 	}
 
+	role := awsiam.NewRole(scope, jsii.String("lambda-role"), &awsiam.RoleProps{
+		AssumedBy: awsiam.NewServicePrincipal(jsii.String("codepipeline.amazonaws.com"), &awsiam.ServicePrincipalOpts{}),
+	})
+	role.AddToPolicy(awsiam.NewPolicyStatement(&awsiam.PolicyStatementProps{
+		Actions:   jsii.Strings("s3:Get*", "s3:List*"),
+		Resources: jsii.Strings(*bucket.BucketArn(), *jsii.String(fmt.Sprintf("%s/*", *bucket.BucketArn()))),
+	}))
+
 	props := &pipeline.PipelineProps{
 		PipelineName: jsii.String(config.Pipeline.Name),
 		Stages:       &stages,
+		Role:         role,
 	}
 
 	return pipeline.NewPipeline(scope, jsii.String("id-codepipeline"), props)
