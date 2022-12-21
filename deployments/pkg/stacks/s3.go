@@ -10,8 +10,9 @@ import (
 
 func CreateS3(scope constructs.Construct, config *configs.Config) awss3.IBucket {
 	return awss3.NewBucket(scope, jsii.String("id-s3-bucket"), &awss3.BucketProps{
-		BucketName:    jsii.String(config.S3.BucketName),
-		Versioned:     jsii.Bool(true),
-		RemovalPolicy: awscdk.RemovalPolicy_DESTROY,
+		BucketName:      jsii.String(config.S3.BucketName),
+		Versioned:       jsii.Bool(true),
+		ObjectOwnership: awss3.ObjectOwnership_BUCKET_OWNER_ENFORCED,
+		RemovalPolicy:   awscdk.RemovalPolicy_DESTROY,
 	})
 }
