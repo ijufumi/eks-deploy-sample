@@ -27,7 +27,7 @@ func NewDeployStack(scope constructs.Construct, id string, props *DeployStackPro
 	_ = stacks.CreateECR(stack, config)
 	_ = stacks.CreateEKS(stack, config, vpc)
 	_ = stacks.CreateCodepipeline(stack, config, s3)
-	lambda := stacks.CreateLambda(stack, config)
+	lambda := stacks.CreateLambda(stack, config, s3)
 
 	// Output results
 	awscdk.NewCfnOutput(stack, jsii.String("id-output-labmda"), &awscdk.CfnOutputProps{
