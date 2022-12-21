@@ -1,10 +1,12 @@
 package stacks
 
 import (
+	"fmt"
 	"os"
 	"path"
 
 	"github.com/aws/aws-cdk-go/awscdk/v2"
+	codepipeline "github.com/aws/aws-cdk-go/awscdk/v2/awscodepipeline"
 	"github.com/aws/aws-cdk-go/awscdk/v2/awsecrassets"
 	"github.com/aws/aws-cdk-go/awscdk/v2/awsiam"
 	"github.com/aws/aws-cdk-go/awscdk/v2/awslambda"
@@ -14,7 +16,7 @@ import (
 	"github.com/ijufumi/eks-deploy-sample/deployments/pkg/configs"
 )
 
-func CreateLambda(scope constructs.Construct, config *configs.Config, s3 awss3.IBucket) awslambda.DockerImageFunction {
+func CreateLambda(scope constructs.Construct, config *configs.Config, s3 awss3.IBucket, pipeline codepipeline.Pipeline) awslambda.DockerImageFunction {
 	current, _ := os.Getwd()
 	imageProps := &awslambda.AssetImageCodeProps{
 		Platform: awsecrassets.Platform_LINUX_AMD64(),
@@ -26,7 +28,11 @@ func CreateLambda(scope constructs.Construct, config *configs.Config, s3 awss3.I
 
 	role.AddToPolicy(awsiam.NewPolicyStatement(&awsiam.PolicyStatementProps{
 		Actions:   jsii.Strings("s3:PutObject"),
-		Resources: jsii.Strings(*s3.BucketArn()),
+		Resources: jsii.Strings(*s3.BucketArn(), *jsii.String(fmt.Sprintf("%s/*", *s3.BucketArn()))),
+	}))
+	role.AddToPolicy(awsiam.NewPolicyStatement(&awsiam.PolicyStatementProps{
+		Actions:   jsii.Strings("codepipeline:UpdatePipeline", "codepipeline:ListPipelines"),
+		Resources: jsii.Strings(*pipeline.PipelineArn()),
 	}))
 
 	props := &awslambda.DockerImageFunctionProps{
