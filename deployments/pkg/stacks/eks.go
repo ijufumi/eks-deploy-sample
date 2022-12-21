@@ -27,6 +27,9 @@ func CreateEKS(scope constructs.Construct, config *configs.Config, vpc awsec2.Vp
 		// Role:        eksTaskRole,
 		Vpc:        vpc,
 		VpcSubnets: &subnets,
+		AlbController: &awseks.AlbControllerOptions{
+			Version: awseks.AlbControllerVersion_V2_4_1(),
+		},
 	}
 
 	cluster := awseks.NewFargateCluster(scope, jsii.String(id), &props)
@@ -100,6 +103,10 @@ func CreateEKS(scope constructs.Construct, config *configs.Config, vpc awsec2.Vp
 		"kind":       jsii.String("Service"),
 		"metadata": map[string]interface{}{
 			"name": jsii.String("service"),
+			"annotations": map[string]*string{
+				"service.beta.kubernetes.io/aws-load-balancer-type":            jsii.String("external"),
+				"service.beta.kubernetes.io/aws-load-balancer-nlb-target-type": jsii.String("ip"),
+			},
 		},
 		"spec": map[string]interface{}{
 			"type": jsii.String("LoadBalancer"),
