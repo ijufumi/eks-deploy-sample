@@ -1,7 +1,7 @@
 #!/bin/bash
 
 CURRENT=$(cd $(dirname $0);pwd)
-sed -i -e "s|${REPOSITORY_URI}:[0-9A-Za-z.-]*|${IMAGE_PATH}|g" ${CURRENT}/deployment.yaml
+sed -i -e "s|.*.amazonaws.com/[0-9A-Za-z.-]*:[0-9A-Za-z.-]*|${IMAGE_PATH}|g" ${CURRENT}/deployment.yaml
 kubectl apply -f ${CURRENT}/deployment.yaml
 
 declare exit_flag=-1
