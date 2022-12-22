@@ -9,6 +9,7 @@ import (
 	"github.com/aws/aws-cdk-go/awscdk/v2/awseks"
 	"github.com/aws/aws-cdk-go/awscdk/v2/awsiam"
 	"github.com/aws/aws-cdk-go/awscdk/v2/awss3"
+	"github.com/aws/aws-cdk-go/awscdk/v2/awsssm"
 	"github.com/aws/constructs-go/constructs/v10"
 	"github.com/aws/jsii-runtime-go"
 	"github.com/ijufumi/eks-deploy-sample/deployments/pkg/configs"
@@ -58,6 +59,15 @@ func CreateCodepipeline(scope constructs.Construct, config *configs.Config, buck
 		},
 	})
 
+	dockerUser := awsssm.NewStringParameter(scope, jsii.String("id-docker-user"), &awsssm.StringParameterProps{
+		ParameterName: jsii.String("dodker-user"),
+		StringValue:   jsii.String(config.Docker.User),
+	})
+	dockerToken := awsssm.NewStringParameter(scope, jsii.String("id-docker-token"), &awsssm.StringParameterProps{
+		ParameterName: jsii.String("dodker-token"),
+		StringValue:   jsii.String(config.Docker.Token),
+	})
+
 	buildAction := actions.NewCodeBuildAction(
 		&actions.CodeBuildActionProps{
 			ActionName: jsii.String("build"),
@@ -87,6 +97,14 @@ func CreateCodepipeline(scope constructs.Construct, config *configs.Config, buck
 				"EKS_CLUSTER_ROLE": {
 					Value: cluster.Role().RoleArn(),
 					Type:  build.BuildEnvironmentVariableType_PLAINTEXT,
+				},
+				"DOCKER_USER": {
+					Value: dockerUser.ParameterName(),
+					Type:  build.BuildEnvironmentVariableType_PARAMETER_STORE,
+				},
+				"DOCKER_TOKEN": {
+					Value: dockerToken.ParameterName(),
+					Type:  build.BuildEnvironmentVariableType_PARAMETER_STORE,
 				},
 			},
 		},

@@ -52,6 +52,11 @@ type Config struct {
 	Slack struct {
 		WebHookURL string `env:"WEB_HOOK_URL"`
 	}
+
+	Docker struct {
+		User  string `env:"DOCKER_USER"`
+		Token string `env:"DOCKER_TOKEN"`
+	}
 }
 
 // Load returns configuration made from environment variables
