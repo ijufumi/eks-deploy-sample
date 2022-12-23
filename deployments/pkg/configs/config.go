@@ -30,7 +30,7 @@ type Config struct {
 
 	Cluster struct {
 		Name       string `env:"CLUSTER_NAME"`
-		K8SVersion string `env:"CLUSTER_K8S_VERSION" envDefault:"1.21"`
+		K8SVersion string `env:"CLUSTER_K8S_VERSION" envDefault:"1.24"`
 		App        struct {
 			Name  string `env:"CLUSTER_APP_NAME"`
 			Image string `env:"CLUSTER_APP_IMAGE"`
