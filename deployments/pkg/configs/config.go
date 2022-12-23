@@ -23,14 +23,14 @@ type Config struct {
 
 	Lambda struct {
 		Image struct {
-			File string `env:"LAMBDA_IMAGE_FILE" default:"../lambda"`
+			File string `env:"LAMBDA_IMAGE_FILE" envDefault:"../lambda"`
 		}
-		TimeoutHours float64 `env:"LAMBDA_TIMEOUT_HOURS" default:"1"`
+		TimeoutHours float64 `env:"LAMBDA_TIMEOUT_HOURS" envDefault:"1"`
 	}
 
 	Cluster struct {
 		Name       string `env:"CLUSTER_NAME"`
-		K8SVersion string `env:"CLUSTER_K8S_VERSION" default:"1.21"`
+		K8SVersion string `env:"CLUSTER_K8S_VERSION" envDefault:"1.21"`
 		App        struct {
 			Name  string `env:"CLUSTER_APP_NAME"`
 			Image string `env:"CLUSTER_APP_IMAGE"`
@@ -38,11 +38,11 @@ type Config struct {
 	}
 
 	Pipeline struct {
-		Name string `env:"PIPELINE_NAME" default:"pipeline"`
+		Name string `env:"PIPELINE_NAME" envDefault:"pipeline"`
 	}
 
 	S3 struct {
-		BucketName string `env:"S3_BUCKET_NAME" default:"pipeline_bucket"`
+		BucketName string `env:"S3_BUCKET_NAME" envDefault:"pipeline_bucket"`
 	}
 
 	Github struct {
