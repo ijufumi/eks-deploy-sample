@@ -3,6 +3,7 @@ package stacks
 import (
 	"github.com/aws/aws-cdk-go/awscdk/v2/awsec2"
 	"github.com/aws/aws-cdk-go/awscdk/v2/awseks"
+	kubectl "github.com/aws/aws-cdk-go/awscdk/v2/lambdalayerkubectl"
 	"github.com/aws/constructs-go/constructs/v10"
 	"github.com/aws/jsii-runtime-go"
 	"github.com/ijufumi/eks-deploy-sample/deployments/pkg/configs"
@@ -20,8 +21,9 @@ func CreateEKS(scope constructs.Construct, config *configs.Config, vpc awsec2.Vp
 	}
 	id := "eks-cluster-id"
 	props := awseks.FargateClusterProps{
-		Version:     awseks.KubernetesVersion_Of(jsii.String(config.Cluster.K8SVersion)),
-		ClusterName: jsii.String(config.Cluster.Name),
+		Version:      awseks.KubernetesVersion_Of(jsii.String(config.Cluster.K8SVersion)),
+		KubectlLayer: kubectl.NewKubectlLayer(scope, jsii.String("id-kubectl-layer")),
+		ClusterName:  jsii.String(config.Cluster.Name),
 		// Role:        eksTaskRole,
 		Vpc:        vpc,
 		VpcSubnets: &subnets,
