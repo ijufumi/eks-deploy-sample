@@ -18,7 +18,7 @@ func CreateVPC(scope constructs.Construct, config *configs.Config) awsec2.Vpc {
 		},
 		{
 			Name:       jsii.String(fmt.Sprintf("private1-subnet-%s", config.Vpc.Name)),
-			SubnetType: awsec2.SubnetType_PRIVATE_WITH_NAT,
+			SubnetType: awsec2.SubnetType_PRIVATE_WITH_EGRESS,
 		},
 		{
 			Name:       jsii.String(fmt.Sprintf("private2-subnet-%s", config.Vpc.Name)),
