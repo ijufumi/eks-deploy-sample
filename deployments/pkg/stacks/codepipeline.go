@@ -16,10 +16,10 @@ import (
 )
 
 func CreateCodepipeline(scope constructs.Construct, config *configs.Config, bucket awss3.IBucket, cluster awseks.Cluster) pipeline.Pipeline {
-	sourceRole := awsiam.NewRole(scope, jsii.String("codepipeline-source-role"), &awsiam.RoleProps{
+	role := awsiam.NewRole(scope, jsii.String("codepipeline-role"), &awsiam.RoleProps{
 		AssumedBy: awsiam.NewServicePrincipal(jsii.String("codepipeline.amazonaws.com"), &awsiam.ServicePrincipalOpts{}),
 	})
-	sourceRole.AddToPolicy(awsiam.NewPolicyStatement(&awsiam.PolicyStatementProps{
+	role.AddToPolicy(awsiam.NewPolicyStatement(&awsiam.PolicyStatementProps{
 		Actions:   jsii.Strings("s3:Get*", "s3:List*"),
 		Resources: jsii.Strings(*bucket.BucketArn(), *jsii.String(fmt.Sprintf("%s/*", *bucket.BucketArn()))),
 	}))
@@ -31,7 +31,7 @@ func CreateCodepipeline(scope constructs.Construct, config *configs.Config, buck
 			Bucket:     bucket,
 			BucketKey:  jsii.String("sample.zip"),
 			Output:     sourceOutput,
-			Role:       sourceRole,
+			Role:       role,
 		},
 	)
 
@@ -119,14 +119,6 @@ func CreateCodepipeline(scope constructs.Construct, config *configs.Config, buck
 			},
 		},
 	}
-
-	role := awsiam.NewRole(scope, jsii.String("codepipeline-role"), &awsiam.RoleProps{
-		AssumedBy: awsiam.NewServicePrincipal(jsii.String("codepipeline.amazonaws.com"), &awsiam.ServicePrincipalOpts{}),
-	})
-	role.AddToPolicy(awsiam.NewPolicyStatement(&awsiam.PolicyStatementProps{
-		Actions:   jsii.Strings("s3:Get*", "s3:List*"),
-		Resources: jsii.Strings(*bucket.BucketArn(), *jsii.String(fmt.Sprintf("%s/*", *bucket.BucketArn()))),
-	}))
 
 	props := &pipeline.PipelineProps{
 		PipelineName: jsii.String(config.Pipeline.Name),
