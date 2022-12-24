@@ -1,18 +1,21 @@
 package stacks
 
 import (
+	"fmt"
+
 	"github.com/aws/aws-cdk-go/awscdk/v2/awsec2"
 	"github.com/aws/aws-cdk-go/awscdk/v2/awseks"
+	"github.com/aws/aws-cdk-go/awscdk/v2/awsiam"
 	kubectl "github.com/aws/aws-cdk-go/awscdk/v2/lambdalayerkubectl"
 	"github.com/aws/constructs-go/constructs/v10"
 	"github.com/aws/jsii-runtime-go"
 	"github.com/ijufumi/eks-deploy-sample/deployments/pkg/configs"
 )
 
-func CreateEKS(scope constructs.Construct, config *configs.Config, vpc awsec2.Vpc) awseks.Cluster {
-	// eksTaskRole := awsiam.NewRole(scope, jsii.String("eks-task-role"), &awsiam.RoleProps{
-	// 	AssumedBy: awsiam.NewServicePrincipal(jsii.String("eks.amazonaws.com"), &awsiam.ServicePrincipalOpts{}),
-	// })
+func CreateEKS(scope constructs.Construct, config *configs.Config, vpc awsec2.Vpc) (awseks.Cluster, awsiam.IRole) {
+	eksMasterRole := awsiam.NewRole(scope, jsii.String("id-eks-master-role"), &awsiam.RoleProps{
+		AssumedBy: awsiam.NewAccountRootPrincipal(),
+	})
 
 	subnets := []*awsec2.SubnetSelection{
 		{
@@ -24,9 +27,9 @@ func CreateEKS(scope constructs.Construct, config *configs.Config, vpc awsec2.Vp
 		Version:      awseks.KubernetesVersion_Of(jsii.String(config.Cluster.K8SVersion)),
 		KubectlLayer: kubectl.NewKubectlLayer(scope, jsii.String("id-kubectl-layer")),
 		ClusterName:  jsii.String(config.Cluster.Name),
-		// Role:        eksTaskRole,
-		Vpc:        vpc,
-		VpcSubnets: &subnets,
+		MastersRole:  eksMasterRole,
+		Vpc:          vpc,
+		VpcSubnets:   &subnets,
 		AlbController: &awseks.AlbControllerOptions{
 			Version: awseks.AlbControllerVersion_V2_4_1(),
 		},
@@ -123,5 +126,20 @@ func CreateEKS(scope constructs.Construct, config *configs.Config, vpc awsec2.Vp
 		},
 	})
 
-	return cluster
+	auth := awseks.NewAwsAuth(scope, jsii.String("id-eks-auth"), &awseks.AwsAuthProps{
+		Cluster: cluster,
+	})
+	auth.AddRoleMapping(cluster.Role(), &awseks.AwsAuthMapping{
+		Groups:   jsii.Strings("system:bootstrappers", "system:nodes"),
+		Username: jsii.String("system:node:{{EC2PrivateDNSName}}"),
+	})
+	auth.AddMastersRole(eksMasterRole, eksMasterRole.RoleName())
+
+	for i, user := range config.Cluster.AdminUsers {
+		auth.AddUserMapping(awsiam.User_FromUserArn(scope, jsii.String(fmt.Sprintf("id-eks-auth-user-%d", i)), jsii.String(user)), &awseks.AwsAuthMapping{
+			Groups: jsii.Strings("system:masters"),
+		})
+	}
+
+	return cluster, eksMasterRole
 }
