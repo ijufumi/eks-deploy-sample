@@ -56,7 +56,7 @@ func CreateLambda(scope constructs.Construct, config *configs.Config, s3 awss3.I
 			"BUCKET_NAME":       jsii.String(config.S3.BucketName),
 			"ACCESS_TOKEN":      jsii.String(config.Github.AccessToken),
 		},
-		Timeout: awscdk.Duration_Hours(jsii.Number(config.Lambda.TimeoutHours)),
+		Timeout: awscdk.Duration_Seconds(jsii.Number(config.Lambda.TimeoutSec)),
 		Role:    role,
 	}
 

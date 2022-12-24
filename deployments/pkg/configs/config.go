@@ -25,7 +25,7 @@ type Config struct {
 		Image struct {
 			File string `env:"LAMBDA_IMAGE_FILE" envDefault:"../lambda"`
 		}
-		TimeoutHours float64 `env:"LAMBDA_TIMEOUT_HOURS" envDefault:"1"`
+		TimeoutSec float64 `env:"LAMBDA_TIMEOUT_SEC" envDefault:"180"`
 	}
 
 	Cluster struct {
