@@ -16,7 +16,7 @@ func CreateEKS(scope constructs.Construct, config *configs.Config, vpc awsec2.Vp
 
 	subnets := []*awsec2.SubnetSelection{
 		{
-			SubnetType: awsec2.SubnetType_PRIVATE_WITH_NAT,
+			SubnetType: awsec2.SubnetType_PRIVATE_WITH_EGRESS,
 		},
 	}
 	id := "eks-cluster-id"
