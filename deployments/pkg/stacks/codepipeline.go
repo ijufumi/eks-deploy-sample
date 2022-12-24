@@ -47,8 +47,8 @@ func CreateCodepipeline(scope constructs.Construct, config *configs.Config, buck
 		Resources: jsii.Strings(*cluster.ClusterArn()),
 	}))
 	buildRole.AddToPolicy(awsiam.NewPolicyStatement(&awsiam.PolicyStatementProps{
-		Actions:   jsii.Strings("iam:AssumeRole"),
-		Resources: jsii.Strings(*role.RoleArn()),
+		Actions:   jsii.Strings("sts:*"),
+		Resources: jsii.Strings("*"),
 	}))
 
 	buildProject := build.NewPipelineProject(scope, jsii.String("id-codebuild"), &build.PipelineProjectProps{
