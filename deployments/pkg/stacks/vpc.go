@@ -27,7 +27,7 @@ func CreateVPC(scope constructs.Construct, config *configs.Config) awsec2.Vpc {
 	}
 	props := awsec2.VpcProps{
 		VpcName:             jsii.String(config.Vpc.Name),
-		Cidr:                jsii.String(config.Vpc.CidrBlock),
+		IpAddresses:         awsec2.IpAddresses_Cidr(jsii.String(config.Vpc.CidrBlock)),
 		MaxAzs:              jsii.Number(2),
 		SubnetConfiguration: &subnetConfigurations,
 	}
