@@ -50,7 +50,7 @@ func CreateCodepipeline(scope constructs.Construct, config *configs.Config, buck
 		Role: buildRole,
 		Environment: &build.BuildEnvironment{
 			Privileged: jsii.Bool(true),
-			BuildImage: build.LinuxArmBuildImage_AMAZON_LINUX_2_STANDARD_2_0(),
+			BuildImage: build.LinuxBuildImage_AMAZON_LINUX_2_ARM_2(),
 		},
 	})
 
