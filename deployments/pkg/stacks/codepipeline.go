@@ -78,7 +78,7 @@ func CreateCodepipeline(scope constructs.Construct, config *configs.Config, buck
 					Type:  build.BuildEnvironmentVariableType_PLAINTEXT,
 				},
 				"AWS_ACCOUNT_ID": {
-					Value: jsii.String(config.AwsAccessKeyID),
+					Value: jsii.String(config.AwsAccountID),
 					Type:  build.BuildEnvironmentVariableType_PLAINTEXT,
 				},
 				"EKS_CLUSTER_NAME": {

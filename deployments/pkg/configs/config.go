@@ -7,6 +7,7 @@ import (
 
 // Config is application configuration
 type Config struct {
+	AwsAccountID      string `env:"AWS_ACCOUNT_ID"`
 	AwsAccessKeyID    string `env:"AWS_ACCESS_KEY_ID"`
 	AwsRegion         string `env:"AWS_REGION"`
 	CdkDefaultAccount string `env:"CDK_DEFAULT_ACCOUNT"`
