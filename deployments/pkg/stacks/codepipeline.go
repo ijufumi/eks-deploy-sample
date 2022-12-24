@@ -47,15 +47,8 @@ func CreateCodepipeline(scope constructs.Construct, config *configs.Config, buck
 		Resources: jsii.Strings(*cluster.ClusterArn()),
 	}))
 	buildRole.AddToPolicy(awsiam.NewPolicyStatement(&awsiam.PolicyStatementProps{
-		Actions:   jsii.Strings("iam:PassRole"),
-		Resources: jsii.Strings(*cluster.ClusterArn()),
-		Conditions: &map[string]interface{}{
-			"StringEquals": map[string]interface{}{
-				"iam:PassedToService": []string{
-					"eks.amazonaws.com",
-				},
-			},
-		},
+		Actions:   jsii.Strings("iam:AssumeRole"),
+		Resources: jsii.Strings(*role.RoleArn()),
 	}))
 
 	buildProject := build.NewPipelineProject(scope, jsii.String("id-codebuild"), &build.PipelineProjectProps{
