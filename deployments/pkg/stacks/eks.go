@@ -139,6 +139,10 @@ func CreateEKS(scope constructs.Construct, config *configs.Config, vpc awsec2.Vp
 		roleArn := fmt.Sprintf("arn:aws:iam::%s:user/%s", config.AwsAccountID, user)
 		auth.AddMastersRole(awsiam.Role_FromRoleArn(scope, jsii.String(fmt.Sprintf("id-eks-auth-user-%d", i)), jsii.String(roleArn), &awsiam.FromRoleArnOptions{}), jsii.String(user))
 	}
+	for i, role := range config.Cluster.AdminRoles {
+		roleArn := fmt.Sprintf("arn:aws:iam::%s:role/%s", config.AwsAccountID, role)
+		auth.AddMastersRole(awsiam.Role_FromRoleArn(scope, jsii.String(fmt.Sprintf("id-eks-auth-role-%d", i)), jsii.String(roleArn), &awsiam.FromRoleArnOptions{}), jsii.String(role))
+	}
 
 	return cluster
 }

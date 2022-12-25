@@ -37,6 +37,7 @@ type Config struct {
 			Image string `env:"CLUSTER_APP_IMAGE"`
 		}
 		AdminUsers []string `env:"CLUSTER_ADMIN_USERS" envSeparator:","`
+		AdminRoles []string `env:"CLUSTER_ADMIN_ROLES" envSeparator:","`
 	}
 
 	Pipeline struct {
