@@ -12,10 +12,10 @@ import (
 	"github.com/ijufumi/eks-deploy-sample/deployments/pkg/configs"
 )
 
-func CreateEKS(scope constructs.Construct, config *configs.Config, vpc awsec2.Vpc) (awseks.Cluster, awsiam.IRole) {
-	eksMasterRole := awsiam.NewRole(scope, jsii.String("id-eks-master-role"), &awsiam.RoleProps{
-		AssumedBy: awsiam.NewAccountRootPrincipal(),
-	})
+func CreateEKS(scope constructs.Construct, config *configs.Config, vpc awsec2.Vpc) awseks.Cluster {
+	//eksMasterRole := awsiam.NewRole(scope, jsii.String("id-eks-master-role"), &awsiam.RoleProps{
+	//	AssumedBy: awsiam.NewAccountRootPrincipal(),
+	//})
 
 	subnets := []*awsec2.SubnetSelection{
 		{
@@ -27,9 +27,9 @@ func CreateEKS(scope constructs.Construct, config *configs.Config, vpc awsec2.Vp
 		Version:      awseks.KubernetesVersion_Of(jsii.String(config.Cluster.K8SVersion)),
 		KubectlLayer: kubectl.NewKubectlLayer(scope, jsii.String("id-kubectl-layer")),
 		ClusterName:  jsii.String(config.Cluster.Name),
-		MastersRole:  eksMasterRole,
-		Vpc:          vpc,
-		VpcSubnets:   &subnets,
+		//MastersRole:  eksMasterRole,
+		Vpc:        vpc,
+		VpcSubnets: &subnets,
 		AlbController: &awseks.AlbControllerOptions{
 			Version: awseks.AlbControllerVersion_V2_4_1(),
 		},
@@ -133,7 +133,7 @@ func CreateEKS(scope constructs.Construct, config *configs.Config, vpc awsec2.Vp
 		Groups:   jsii.Strings("system:bootstrappers", "system:nodes"),
 		Username: jsii.String("system:node:{{EC2PrivateDNSName}}"),
 	})
-	auth.AddMastersRole(eksMasterRole, eksMasterRole.RoleName())
+	// auth.AddMastersRole(eksMasterRole, eksMasterRole.RoleName())
 
 	for i, user := range config.Cluster.AdminUsers {
 		auth.AddUserMapping(awsiam.User_FromUserArn(scope, jsii.String(fmt.Sprintf("id-eks-auth-user-%d", i)), jsii.String(user)), &awseks.AwsAuthMapping{
@@ -141,5 +141,5 @@ func CreateEKS(scope constructs.Construct, config *configs.Config, vpc awsec2.Vp
 		})
 	}
 
-	return cluster, eksMasterRole
+	return cluster
 }
