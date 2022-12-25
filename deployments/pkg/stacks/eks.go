@@ -137,7 +137,9 @@ func CreateEKS(scope constructs.Construct, config *configs.Config, vpc awsec2.Vp
 
 	for i, user := range config.Cluster.AdminUsers {
 		roleArn := fmt.Sprintf("arn:aws:iam::%s:user/%s", config.AwsAccountID, user)
-		auth.AddMastersRole(awsiam.Role_FromRoleArn(scope, jsii.String(fmt.Sprintf("id-eks-auth-user-%d", i)), jsii.String(roleArn), &awsiam.FromRoleArnOptions{}), jsii.String(user))
+		auth.AddUserMapping(awsiam.User_FromUserArn(scope, jsii.String(fmt.Sprintf("id-eks-auth-user-%d", i)), jsii.String(roleArn)), &awseks.AwsAuthMapping{
+			Groups: jsii.Strings("system:masters"),
+		})
 	}
 	for i, role := range config.Cluster.AdminRoles {
 		roleArn := fmt.Sprintf("arn:aws:iam::%s:role/%s", config.AwsAccountID, role)
