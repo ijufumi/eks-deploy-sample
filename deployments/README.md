@@ -76,7 +76,7 @@ brew install aws-cdk
 | `CLUSTER_K8S_VERSION` | `EKS` に設定する `Kubernetes` のバージョン |
 | `CLUSTER_APP_NAME` | `EKS` にデプロイする `app` の名前 |
 | `CLUSTER_APP_IMAGE` | `EkS` にデプロイする最初の `docker` イメージ |
-| `CLUSTER_ADMIN_USERS` | `EKS` の `ConfigMap` に設定するユーザの `ARN` リスト。 `,` で区切って指定する |
+| `CLUSTER_ADMIN_USERS` | `EKS` の `ConfigMap` に設定するユーザ名リスト。 `,` で区切って指定する |
 | `PIPELINE_NAME` | `Codepipeline` の名前 |
 | `S3_BUCKET_NAME` | `S3` バケットの名前 |
 | `GITHUB_ACCESS_TOKEN` | `Lambda` から `Github` にアクセスするためのトークン |
