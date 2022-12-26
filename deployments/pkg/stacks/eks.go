@@ -126,27 +126,25 @@ func CreateEKS(scope constructs.Construct, config *configs.Config, vpc awsec2.Vp
 		},
 	})
 
-	auth := awseks.NewAwsAuth(scope, jsii.String("id-eks-auth"), &awseks.AwsAuthProps{
-		Cluster: cluster,
-	})
-	auth.AddRoleMapping(cluster.Role(), &awseks.AwsAuthMapping{
+	cluster.AwsAuth().AddRoleMapping(cluster.Role(), &awseks.AwsAuthMapping{
 		Groups:   jsii.Strings("system:bootstrappers", "system:nodes"),
 		Username: jsii.String("system:node:{{EC2PrivateDNSName}}"),
 	})
 	for i, role := range config.Cluster.AdminRoles {
 		roleArn := fmt.Sprintf("arn:aws:iam::%s:role/%s", config.AwsAccountID, role)
 		role := awsiam.Role_FromRoleArn(scope, jsii.String(fmt.Sprintf("id-eks-auth-role-%d", i)), jsii.String(roleArn), &awsiam.FromRoleArnOptions{})
-		auth.AddRoleMapping(role, &awseks.AwsAuthMapping{
+		cluster.AwsAuth().AddRoleMapping(role, &awseks.AwsAuthMapping{
 			Groups:   jsii.Strings("system:bootstrappers", "system:nodes"),
 			Username: jsii.String("system:node:{{EC2PrivateDNSName}}"),
 		})
 	}
-	// auth.AddMastersRole(eksMasterRole, eksMasterRole.RoleName())
 
-	for i, user := range config.Cluster.AdminUsers {
-		roleArn := fmt.Sprintf("arn:aws:iam::%s:user/%s", config.AwsAccountID, user)
-		auth.AddUserMapping(awsiam.User_FromUserArn(scope, jsii.String(fmt.Sprintf("id-eks-auth-user-%d", i)), jsii.String(roleArn)), &awseks.AwsAuthMapping{
-			Groups: jsii.Strings("system:masters"),
+	for i, userName := range config.Cluster.AdminUsers {
+		userArn := fmt.Sprintf("arn:aws:iam::%s:user/%s", config.AwsAccountID, userName)
+		user := awsiam.User_FromUserArn(scope, jsii.String(fmt.Sprintf("id-eks-auth-user-%d", i)), jsii.String(userArn))
+		cluster.AwsAuth().AddUserMapping(user, &awseks.AwsAuthMapping{
+			Groups:   jsii.Strings("system:masters"),
+			Username: jsii.String(userName),
 		})
 	}
 
