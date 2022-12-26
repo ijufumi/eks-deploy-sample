@@ -14,7 +14,7 @@ import (
 	"github.com/ijufumi/eks-deploy-sample/deployments/pkg/configs"
 )
 
-func CreateCodepipeline(scope constructs.Construct, config *configs.Config, bucket awss3.IBucket, region *string) (pipeline.Pipeline, awsiam.IRole) {
+func CreateCodepipeline(scope constructs.Construct, config *configs.Config, bucket awss3.IBucket) (pipeline.Pipeline, awsiam.IRole) {
 	role := awsiam.NewRole(scope, jsii.String("codepipeline-role"), &awsiam.RoleProps{
 		AssumedBy: awsiam.NewServicePrincipal(jsii.String("codepipeline.amazonaws.com"), &awsiam.ServicePrincipalOpts{}),
 	})
@@ -88,8 +88,8 @@ func CreateCodepipeline(scope constructs.Construct, config *configs.Config, buck
 					Value: jsii.String(config.AwsAccountID),
 					Type:  build.BuildEnvironmentVariableType_PLAINTEXT,
 				},
-				"EKS_CLUSTER_REGION": {
-					Value: region,
+				"EKS_CLUSTER_NAME": {
+					Value: jsii.String(config.Cluster.Name),
 					Type:  build.BuildEnvironmentVariableType_PLAINTEXT,
 				},
 				"DOCKER_USER": {
