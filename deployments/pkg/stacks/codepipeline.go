@@ -92,6 +92,10 @@ func CreateCodepipeline(scope constructs.Construct, config *configs.Config, buck
 					Value: jsii.String(config.Cluster.Name),
 					Type:  build.BuildEnvironmentVariableType_PLAINTEXT,
 				},
+				"EKS_CLUSTER_ROLE": {
+					Value: buildRole.RoleArn(),
+					Type:  build.BuildEnvironmentVariableType_PLAINTEXT,
+				},
 				"DOCKER_USER": {
 					Value: dockerUser.ParameterName(),
 					Type:  build.BuildEnvironmentVariableType_PARAMETER_STORE,
