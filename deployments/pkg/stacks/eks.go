@@ -126,6 +126,13 @@ func CreateEKS(scope constructs.Construct, config *configs.Config, vpc awsec2.Vp
 		},
 	})
 
+	cluster.Role().AddToPrincipalPolicy(awsiam.NewPolicyStatement(
+		&awsiam.PolicyStatementProps{
+			Actions:   jsii.Strings("sts:AssumeRole"),
+			Effect:    awsiam.Effect_ALLOW,
+			Resources: jsii.Strings("*"),
+		},
+	))
 	cluster.AwsAuth().AddRoleMapping(cluster.Role(), &awseks.AwsAuthMapping{
 		Groups:   jsii.Strings("system:masters"),
 		Username: cluster.Role().RoleArn(),
