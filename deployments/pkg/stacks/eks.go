@@ -127,8 +127,8 @@ func CreateEKS(scope constructs.Construct, config *configs.Config, vpc awsec2.Vp
 	})
 
 	cluster.AwsAuth().AddRoleMapping(cluster.Role(), &awseks.AwsAuthMapping{
-		Groups:   jsii.Strings("system:bootstrappers", "system:nodes"),
-		Username: jsii.String("system:node:{{EC2PrivateDNSName}}"),
+		Groups:   jsii.Strings("system:masters"),
+		Username: cluster.Role().RoleArn(),
 	})
 	for i, role := range config.Cluster.AdminRoles {
 		roleArn := fmt.Sprintf("arn:aws:iam::%s:role/%s", config.AwsAccountID, role)
