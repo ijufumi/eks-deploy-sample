@@ -40,14 +40,17 @@ func CreateCodepipeline(scope constructs.Construct, config *configs.Config, buck
 	})
 	buildRole.AddToPolicy(awsiam.NewPolicyStatement(&awsiam.PolicyStatementProps{
 		Actions:   jsii.Strings("ecr:*"),
+		Effect:    awsiam.Effect_ALLOW,
 		Resources: jsii.Strings("*"),
 	}))
 	buildRole.AddToPolicy(awsiam.NewPolicyStatement(&awsiam.PolicyStatementProps{
 		Actions:   jsii.Strings("eks:DescribeCluster"),
+		Effect:    awsiam.Effect_ALLOW,
 		Resources: jsii.Strings(*cluster.ClusterArn()),
 	}))
 	buildRole.AddToPolicy(awsiam.NewPolicyStatement(&awsiam.PolicyStatementProps{
-		Actions:   jsii.Strings("sts:*"),
+		Actions:   jsii.Strings("sts:AssumeRole"),
+		Effect:    awsiam.Effect_ALLOW,
 		Resources: jsii.Strings("*"),
 	}))
 
