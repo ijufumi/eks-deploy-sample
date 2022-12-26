@@ -6,7 +6,6 @@ import (
 	build "github.com/aws/aws-cdk-go/awscdk/v2/awscodebuild"
 	pipeline "github.com/aws/aws-cdk-go/awscdk/v2/awscodepipeline"
 	actions "github.com/aws/aws-cdk-go/awscdk/v2/awscodepipelineactions"
-	"github.com/aws/aws-cdk-go/awscdk/v2/awseks"
 	"github.com/aws/aws-cdk-go/awscdk/v2/awsiam"
 	"github.com/aws/aws-cdk-go/awscdk/v2/awss3"
 	"github.com/aws/aws-cdk-go/awscdk/v2/awsssm"
@@ -15,7 +14,7 @@ import (
 	"github.com/ijufumi/eks-deploy-sample/deployments/pkg/configs"
 )
 
-func CreateCodepipeline(scope constructs.Construct, config *configs.Config, bucket awss3.IBucket, cluster awseks.Cluster) pipeline.Pipeline {
+func CreateCodepipeline(scope constructs.Construct, config *configs.Config, bucket awss3.IBucket, region *string) (pipeline.Pipeline, awsiam.IRole) {
 	role := awsiam.NewRole(scope, jsii.String("codepipeline-role"), &awsiam.RoleProps{
 		AssumedBy: awsiam.NewServicePrincipal(jsii.String("codepipeline.amazonaws.com"), &awsiam.ServicePrincipalOpts{}),
 	})
@@ -44,9 +43,9 @@ func CreateCodepipeline(scope constructs.Construct, config *configs.Config, buck
 		Resources: jsii.Strings("*"),
 	}))
 	buildRole.AddToPolicy(awsiam.NewPolicyStatement(&awsiam.PolicyStatementProps{
-		Actions:   jsii.Strings("eks:DescribeCluster"),
+		Actions:   jsii.Strings("eks:*"),
 		Effect:    awsiam.Effect_ALLOW,
-		Resources: jsii.Strings(*cluster.ClusterArn()),
+		Resources: jsii.Strings("*"),
 	}))
 	buildRole.AddToPolicy(awsiam.NewPolicyStatement(&awsiam.PolicyStatementProps{
 		Actions:   jsii.Strings("sts:AssumeRole"),
@@ -89,16 +88,8 @@ func CreateCodepipeline(scope constructs.Construct, config *configs.Config, buck
 					Value: jsii.String(config.AwsAccountID),
 					Type:  build.BuildEnvironmentVariableType_PLAINTEXT,
 				},
-				"EKS_CLUSTER_NAME": {
-					Value: cluster.ClusterName(),
-					Type:  build.BuildEnvironmentVariableType_PLAINTEXT,
-				},
 				"EKS_CLUSTER_REGION": {
-					Value: cluster.Env().Region,
-					Type:  build.BuildEnvironmentVariableType_PLAINTEXT,
-				},
-				"EKS_CLUSTER_ROLE": {
-					Value: cluster.Role().RoleArn(),
+					Value: region,
 					Type:  build.BuildEnvironmentVariableType_PLAINTEXT,
 				},
 				"DOCKER_USER": {
@@ -134,5 +125,5 @@ func CreateCodepipeline(scope constructs.Construct, config *configs.Config, buck
 		Role:         role,
 	}
 
-	return pipeline.NewPipeline(scope, jsii.String("id-codepipeline"), props)
+	return pipeline.NewPipeline(scope, jsii.String("id-codepipeline"), props), buildRole
 }
