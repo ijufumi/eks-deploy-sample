@@ -15,7 +15,7 @@ import (
 )
 
 func CreateCodepipeline(scope constructs.Construct, config *configs.Config, bucket awss3.IBucket) (pipeline.Pipeline, awsiam.IRole) {
-	kubectlRole := awsiam.NewRole(scope, jsii.String("codepipeline-role"), &awsiam.RoleProps{
+	kubectlRole := awsiam.NewRole(scope, jsii.String("kubectl-role"), &awsiam.RoleProps{
 		AssumedBy: awsiam.NewAccountRootPrincipal(),
 	})
 
