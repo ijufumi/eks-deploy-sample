@@ -12,7 +12,7 @@ import (
 	"github.com/ijufumi/eks-deploy-sample/deployments/pkg/configs"
 )
 
-func CreateEKS(scope constructs.Construct, config *configs.Config, vpc awsec2.Vpc, buildRole awsiam.IRole) awseks.Cluster {
+func CreateEKS(scope constructs.Construct, config *configs.Config, vpc awsec2.Vpc, kubectlRole awsiam.IRole) awseks.Cluster {
 	//eksMasterRole := awsiam.NewRole(scope, jsii.String("id-eks-master-role"), &awsiam.RoleProps{
 	//	AssumedBy: awsiam.NewAccountRootPrincipal(),
 	//})
@@ -139,7 +139,7 @@ func CreateEKS(scope constructs.Construct, config *configs.Config, vpc awsec2.Vp
 	})
 	cluster.AwsAuth().AddRoleMapping(cluster.Role(), &awseks.AwsAuthMapping{
 		Groups:   jsii.Strings("system:masters"),
-		Username: buildRole.RoleArn(),
+		Username: kubectlRole.RoleArn(),
 	})
 
 	for i, role := range config.Cluster.AdminRoles {

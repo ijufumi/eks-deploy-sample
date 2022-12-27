@@ -15,6 +15,10 @@ import (
 )
 
 func CreateCodepipeline(scope constructs.Construct, config *configs.Config, bucket awss3.IBucket) (pipeline.Pipeline, awsiam.IRole) {
+	kubectlRole := awsiam.NewRole(scope, jsii.String("codepipeline-role"), &awsiam.RoleProps{
+		AssumedBy: awsiam.NewAccountRootPrincipal(),
+	})
+
 	role := awsiam.NewRole(scope, jsii.String("codepipeline-role"), &awsiam.RoleProps{
 		AssumedBy: awsiam.NewServicePrincipal(jsii.String("codepipeline.amazonaws.com"), &awsiam.ServicePrincipalOpts{}),
 	})
@@ -85,7 +89,7 @@ func CreateCodepipeline(scope constructs.Construct, config *configs.Config, buck
 					Type:  build.BuildEnvironmentVariableType_PLAINTEXT,
 				},
 				"EKS_CLUSTER_ROLE": {
-					Value: buildProject.Role().RoleArn(),
+					Value: kubectlRole.RoleArn(),
 					Type:  build.BuildEnvironmentVariableType_PLAINTEXT,
 				},
 				"DOCKER_USER": {
@@ -121,5 +125,5 @@ func CreateCodepipeline(scope constructs.Construct, config *configs.Config, buck
 		Role:         role,
 	}
 
-	return pipeline.NewPipeline(scope, jsii.String("id-codepipeline"), props), buildProject.Role()
+	return pipeline.NewPipeline(scope, jsii.String("id-codepipeline"), props), kubectlRole
 }
