@@ -22,7 +22,7 @@ phases:
       - docker tag ${IMAGE_REPO_NAME}:${IMAGE_TAG} ${REPOSITORY_URI}:${IMAGE_TAG}
       - docker push ${REPOSITORY_URI}:${IMAGE_TAG}
       - IMAGE_PATH=$(echo ${REPOSITORY_URI}:${IMAGE_TAG})
-      - aws eks update-kubeconfig --name ${EKS_CLUSTER_NAME} --region ${AWS_DEFAULT_REGION}  --role-arn ${EKS_CLUSTER_ROLE}
+      - aws eks update-kubeconfig --name ${EKS_CLUSTER_NAME} --region ${AWS_DEFAULT_REGION}
       - KUBECONFIG=/root/.kube/config
       - /bin/bash deploy/apply-image.sh
       - /bin/bash scripts/notification.sh $?
