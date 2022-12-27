@@ -35,27 +35,23 @@ func CreateCodepipeline(scope constructs.Construct, config *configs.Config, buck
 		},
 	)
 
-	buildRole := awsiam.NewRole(scope, jsii.String("codepipeline-build-role"), &awsiam.RoleProps{
-		AssumedBy: awsiam.NewServicePrincipal(jsii.String("codebuild.amazonaws.com"), &awsiam.ServicePrincipalOpts{}),
-	})
-	buildRole.AddToPolicy(awsiam.NewPolicyStatement(&awsiam.PolicyStatementProps{
-		Actions:   jsii.Strings("ecr:*"),
-		Effect:    awsiam.Effect_ALLOW,
-		Resources: jsii.Strings("*"),
-	}))
-	buildRole.AddToPolicy(awsiam.NewPolicyStatement(&awsiam.PolicyStatementProps{
-		Actions:   jsii.Strings("eks:*"),
-		Effect:    awsiam.Effect_ALLOW,
-		Resources: jsii.Strings("*"),
-	}))
-
 	buildProject := build.NewPipelineProject(scope, jsii.String("id-codebuild"), &build.PipelineProjectProps{
-		Role: buildRole,
 		Environment: &build.BuildEnvironment{
 			Privileged: jsii.Bool(true),
 			BuildImage: build.LinuxBuildImage_STANDARD_6_0(),
 		},
 	})
+
+	buildProject.AddToRolePolicy(awsiam.NewPolicyStatement(&awsiam.PolicyStatementProps{
+		Actions:   jsii.Strings("ecr:*"),
+		Effect:    awsiam.Effect_ALLOW,
+		Resources: jsii.Strings("*"),
+	}))
+	buildProject.AddToRolePolicy(awsiam.NewPolicyStatement(&awsiam.PolicyStatementProps{
+		Actions:   jsii.Strings("eks:*"),
+		Effect:    awsiam.Effect_ALLOW,
+		Resources: jsii.Strings("*"),
+	}))
 
 	dockerUser := awsssm.NewStringParameter(scope, jsii.String("id-docker-user"), &awsssm.StringParameterProps{
 		ParameterName: jsii.String("dodker-user"),
@@ -89,7 +85,7 @@ func CreateCodepipeline(scope constructs.Construct, config *configs.Config, buck
 					Type:  build.BuildEnvironmentVariableType_PLAINTEXT,
 				},
 				"EKS_CLUSTER_ROLE": {
-					Value: buildRole.RoleArn(),
+					Value: buildProject.Role().RoleArn(),
 					Type:  build.BuildEnvironmentVariableType_PLAINTEXT,
 				},
 				"DOCKER_USER": {
@@ -125,5 +121,5 @@ func CreateCodepipeline(scope constructs.Construct, config *configs.Config, buck
 		Role:         role,
 	}
 
-	return pipeline.NewPipeline(scope, jsii.String("id-codepipeline"), props), buildRole
+	return pipeline.NewPipeline(scope, jsii.String("id-codepipeline"), props), buildProject.Role()
 }
