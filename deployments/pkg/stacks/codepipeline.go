@@ -31,6 +31,7 @@ func CreateCodepipeline(scope constructs.Construct, config *configs.Config, buck
 			BucketKey:  jsii.String("sample.zip"),
 			Output:     sourceOutput,
 			Role:       role,
+			Trigger:    actions.S3Trigger_NONE,
 		},
 	)
 
