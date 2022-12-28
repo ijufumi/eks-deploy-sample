@@ -15,8 +15,8 @@ import (
 )
 
 func CreateCodepipeline(scope constructs.Construct, config *configs.Config, bucket awss3.IBucket) (pipeline.Pipeline, awsiam.IRole) {
-	kubectlRole := awsiam.NewRole(scope, jsii.String("kubectl-role"), &awsiam.RoleProps{
-		AssumedBy: awsiam.NewAccountRootPrincipal(),
+	buildRole := awsiam.NewRole(scope, jsii.String("kubectl-role"), &awsiam.RoleProps{
+		AssumedBy: awsiam.NewServicePrincipal(jsii.String("codebuild.amazonaws.com"), &awsiam.ServicePrincipalOpts{}),
 	})
 
 	role := awsiam.NewRole(scope, jsii.String("codepipeline-role"), &awsiam.RoleProps{
@@ -26,6 +26,13 @@ func CreateCodepipeline(scope constructs.Construct, config *configs.Config, buck
 		Actions:   jsii.Strings("s3:Get*", "s3:List*"),
 		Resources: jsii.Strings(*bucket.BucketArn(), *jsii.String(fmt.Sprintf("%s/*", *bucket.BucketArn()))),
 	}))
+	role.AddToPolicy(awsiam.NewPolicyStatement(
+		&awsiam.PolicyStatementProps{
+			Actions:   jsii.Strings("sts:AssumeRole"),
+			Effect:    awsiam.Effect_ALLOW,
+			Resources: jsii.Strings("*"),
+		},
+	))
 
 	sourceOutput := pipeline.NewArtifact(jsii.String("source"))
 	sourceAction := actions.NewS3SourceAction(
@@ -40,18 +47,19 @@ func CreateCodepipeline(scope constructs.Construct, config *configs.Config, buck
 	)
 
 	buildProject := build.NewPipelineProject(scope, jsii.String("id-codebuild"), &build.PipelineProjectProps{
+		Role: buildRole,
 		Environment: &build.BuildEnvironment{
 			Privileged: jsii.Bool(true),
 			BuildImage: build.LinuxBuildImage_STANDARD_6_0(),
 		},
 	})
 
-	buildProject.AddToRolePolicy(awsiam.NewPolicyStatement(&awsiam.PolicyStatementProps{
+	buildRole.AddToPolicy(awsiam.NewPolicyStatement(&awsiam.PolicyStatementProps{
 		Actions:   jsii.Strings("ecr:*"),
 		Effect:    awsiam.Effect_ALLOW,
 		Resources: jsii.Strings("*"),
 	}))
-	buildProject.AddToRolePolicy(awsiam.NewPolicyStatement(&awsiam.PolicyStatementProps{
+	buildRole.AddToPolicy(awsiam.NewPolicyStatement(&awsiam.PolicyStatementProps{
 		Actions:   jsii.Strings("eks:*"),
 		Effect:    awsiam.Effect_ALLOW,
 		Resources: jsii.Strings("*"),
@@ -89,7 +97,7 @@ func CreateCodepipeline(scope constructs.Construct, config *configs.Config, buck
 					Type:  build.BuildEnvironmentVariableType_PLAINTEXT,
 				},
 				"EKS_CLUSTER_ROLE": {
-					Value: kubectlRole.RoleArn(),
+					Value: buildRole.RoleArn(),
 					Type:  build.BuildEnvironmentVariableType_PLAINTEXT,
 				},
 				"DOCKER_USER": {
@@ -125,5 +133,5 @@ func CreateCodepipeline(scope constructs.Construct, config *configs.Config, buck
 		Role:         role,
 	}
 
-	return pipeline.NewPipeline(scope, jsii.String("id-codepipeline"), props), kubectlRole
+	return pipeline.NewPipeline(scope, jsii.String("id-codepipeline"), props), buildRole
 }
