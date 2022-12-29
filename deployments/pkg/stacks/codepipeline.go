@@ -57,9 +57,14 @@ func CreateCodepipeline(scope constructs.Construct, config *configs.Config, buck
 	})
 
 	buildRole.AddToPolicy(awsiam.NewPolicyStatement(&awsiam.PolicyStatementProps{
-		Actions:   jsii.Strings("ecr:Get*", "ecr:PutImage"),
+		Actions:   jsii.Strings("ecr:PutImage"),
 		Effect:    awsiam.Effect_ALLOW,
 		Resources: jsii.Strings(*repository.RepositoryArn()),
+	}))
+	buildRole.AddToPolicy(awsiam.NewPolicyStatement(&awsiam.PolicyStatementProps{
+		Actions:   jsii.Strings("ecr:GetAuthorizationToken"),
+		Effect:    awsiam.Effect_ALLOW,
+		Resources: jsii.Strings(fmt.Sprintf("arn:aws:ecr:%s:%s:repository/*", *config.GetAwsRegion(), *config.GetAwsAccountID())),
 	}))
 	buildRole.AddToPolicy(awsiam.NewPolicyStatement(&awsiam.PolicyStatementProps{
 		Actions:   jsii.Strings("eks:DescribeCluster"),
@@ -96,7 +101,7 @@ func CreateCodepipeline(scope constructs.Construct, config *configs.Config, buck
 					Type:  build.BuildEnvironmentVariableType_PLAINTEXT,
 				},
 				"AWS_ACCOUNT_ID": {
-					Value: jsii.String(config.AwsAccountID),
+					Value: config.GetAwsAccountID(),
 					Type:  build.BuildEnvironmentVariableType_PLAINTEXT,
 				},
 				"EKS_CLUSTER_NAME": {

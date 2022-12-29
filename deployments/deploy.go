@@ -55,17 +55,9 @@ func main() {
 }
 
 func env(config *configs.Config) *awscdk.Environment {
-	var account = config.AwsAccessKeyID
-	if len(account) == 0 {
-		account = config.CdkDefaultAccount
-	}
-	var region = config.AwsRegion
-	if len(region) == 0 {
-		region = config.CdkDefaultRegion
-	}
 	return &awscdk.Environment{
-		Account: jsii.String(account),
-		Region:  jsii.String(region),
+		Account: config.GetAwsAccountID(),
+		Region:  config.GetAwsRegion(),
 	}
 
 }

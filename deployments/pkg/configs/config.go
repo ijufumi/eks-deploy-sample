@@ -1,6 +1,7 @@
 package configs
 
 import (
+	"github.com/aws/jsii-runtime-go"
 	"github.com/caarlos0/env/v6"
 	"github.com/joho/godotenv"
 )
@@ -8,7 +9,6 @@ import (
 // Config is application configuration
 type Config struct {
 	AwsAccountID      string `env:"AWS_ACCOUNT_ID"`
-	AwsAccessKeyID    string `env:"AWS_ACCESS_KEY_ID"`
 	AwsRegion         string `env:"AWS_REGION"`
 	CdkDefaultAccount string `env:"CDK_DEFAULT_ACCOUNT"`
 	CdkDefaultRegion  string `env:"CDK_DEFAULT_REGION"`
@@ -60,6 +60,20 @@ type Config struct {
 		User  string `env:"DOCKER_USER"`
 		Token string `env:"DOCKER_TOKEN"`
 	}
+}
+
+func (c *Config) GetAwsAccountID() *string {
+	if len(c.AwsAccountID) != 0 {
+		return jsii.String(c.AwsAccountID)
+	}
+	return jsii.String(c.CdkDefaultAccount)
+}
+
+func (c *Config) GetAwsRegion() *string {
+	if len(c.AwsRegion) != 0 {
+		return jsii.String(c.AwsRegion)
+	}
+	return jsii.String(c.CdkDefaultRegion)
 }
 
 // Load returns configuration made from environment variables
