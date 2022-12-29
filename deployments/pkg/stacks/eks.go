@@ -12,10 +12,10 @@ import (
 	"github.com/ijufumi/eks-deploy-sample/deployments/pkg/configs"
 )
 
-func CreateEKS(scope constructs.Construct, config *configs.Config, vpc awsec2.Vpc, kubectlRole awsiam.IRole) awseks.Cluster {
-	//eksMasterRole := awsiam.NewRole(scope, jsii.String("id-eks-master-role"), &awsiam.RoleProps{
-	//	AssumedBy: awsiam.NewAccountRootPrincipal(),
-	//})
+func CreateEKS(scope constructs.Construct, config *configs.Config, vpc awsec2.Vpc) (awseks.Cluster, awsiam.IRole) {
+	eksMasterRole := awsiam.NewRole(scope, jsii.String("id-eks-master-role"), &awsiam.RoleProps{
+		AssumedBy: awsiam.NewAccountRootPrincipal(),
+	})
 
 	subnets := []*awsec2.SubnetSelection{
 		{
@@ -27,9 +27,9 @@ func CreateEKS(scope constructs.Construct, config *configs.Config, vpc awsec2.Vp
 		Version:      awseks.KubernetesVersion_Of(jsii.String(config.Cluster.K8SVersion)),
 		KubectlLayer: kubectl.NewKubectlLayer(scope, jsii.String("id-kubectl-layer")),
 		ClusterName:  jsii.String(config.Cluster.Name),
-		//MastersRole:  eksMasterRole,
-		Vpc:        vpc,
-		VpcSubnets: &subnets,
+		MastersRole:  eksMasterRole,
+		Vpc:          vpc,
+		VpcSubnets:   &subnets,
 		AlbController: &awseks.AlbControllerOptions{
 			Version: awseks.AlbControllerVersion_V2_4_1(),
 		},
@@ -134,14 +134,6 @@ func CreateEKS(scope constructs.Construct, config *configs.Config, vpc awsec2.Vp
 		},
 	))
 
-	masterRoles := []awsiam.IRole{cluster.Role(), kubectlRole}
-	for _, role := range masterRoles {
-		cluster.AwsAuth().AddRoleMapping(role, &awseks.AwsAuthMapping{
-			Groups:   jsii.Strings("system:masters"),
-			Username: role.RoleName(),
-		})
-	}
-
 	for i, role := range config.Cluster.AdminRoles {
 		roleArn := fmt.Sprintf("arn:aws:iam::%s:role/%s", config.AwsAccountID, role)
 		role := awsiam.Role_FromRoleArn(scope, jsii.String(fmt.Sprintf("id-eks-auth-role-%d", i)), jsii.String(roleArn), &awsiam.FromRoleArnOptions{})
@@ -160,5 +152,5 @@ func CreateEKS(scope constructs.Construct, config *configs.Config, vpc awsec2.Vp
 		})
 	}
 
-	return cluster
+	return cluster, eksMasterRole
 }
