@@ -6,6 +6,8 @@ import (
 	build "github.com/aws/aws-cdk-go/awscdk/v2/awscodebuild"
 	pipeline "github.com/aws/aws-cdk-go/awscdk/v2/awscodepipeline"
 	actions "github.com/aws/aws-cdk-go/awscdk/v2/awscodepipelineactions"
+	"github.com/aws/aws-cdk-go/awscdk/v2/awsecr"
+	"github.com/aws/aws-cdk-go/awscdk/v2/awseks"
 	"github.com/aws/aws-cdk-go/awscdk/v2/awsiam"
 	"github.com/aws/aws-cdk-go/awscdk/v2/awss3"
 	"github.com/aws/aws-cdk-go/awscdk/v2/awsssm"
@@ -14,7 +16,7 @@ import (
 	"github.com/ijufumi/eks-deploy-sample/deployments/pkg/configs"
 )
 
-func CreateCodepipeline(scope constructs.Construct, config *configs.Config, bucket awss3.IBucket, eksMasterRole awsiam.IRole) pipeline.Pipeline {
+func CreateCodepipeline(scope constructs.Construct, config *configs.Config, bucket awss3.IBucket, repository awsecr.IRepository, cluster awseks.ICluster, eksMasterRole awsiam.IRole) pipeline.Pipeline {
 	buildRole := awsiam.NewRole(scope, jsii.String("codebuild-role"), &awsiam.RoleProps{
 		AssumedBy: awsiam.NewServicePrincipal(jsii.String("codebuild.amazonaws.com"), &awsiam.ServicePrincipalOpts{}),
 	})
@@ -55,14 +57,19 @@ func CreateCodepipeline(scope constructs.Construct, config *configs.Config, buck
 	})
 
 	buildRole.AddToPolicy(awsiam.NewPolicyStatement(&awsiam.PolicyStatementProps{
-		Actions:   jsii.Strings("ecr:*"),
+		Actions:   jsii.Strings("ecr:Get*", "ecr:PutImage"),
 		Effect:    awsiam.Effect_ALLOW,
-		Resources: jsii.Strings("*"),
+		Resources: jsii.Strings(*repository.RepositoryArn()),
 	}))
 	buildRole.AddToPolicy(awsiam.NewPolicyStatement(&awsiam.PolicyStatementProps{
-		Actions:   jsii.Strings("eks:*"),
+		Actions:   jsii.Strings("eks:DescribeCluster"),
 		Effect:    awsiam.Effect_ALLOW,
-		Resources: jsii.Strings("*"),
+		Resources: jsii.Strings(*cluster.ClusterArn()),
+	}))
+	buildRole.AddToPolicy(awsiam.NewPolicyStatement(&awsiam.PolicyStatementProps{
+		Actions:   jsii.Strings("sts:AssumeRole"),
+		Effect:    awsiam.Effect_ALLOW,
+		Resources: jsii.Strings(*eksMasterRole.RoleArn()),
 	}))
 
 	dockerUser := awsssm.NewStringParameter(scope, jsii.String("id-docker-user"), &awsssm.StringParameterProps{
