@@ -1,7 +1,7 @@
 #!/bin/bash
 
 CURRENT=$(cd $(dirname $0);pwd)
-sed -i -E "s|[0-9]+.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}:[0-9A-Za-z.-]*|${IMAGE_PATH}|g" ${CURRENT}/deployment.yaml
+sed -i -E "s|[0-9]+.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/[0-9A-Za-z.-]+:[0-9A-Za-z.-]+|${IMAGE_PATH}|g" ${CURRENT}/deployment.yaml
 kubectl apply -f ${CURRENT}/deployment.yaml
 
 declare exit_flag=-1
