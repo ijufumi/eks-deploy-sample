@@ -59,7 +59,7 @@ func CreateCodepipeline(scope constructs.Construct, config *configs.Config, buck
 	buildRole.AddToPolicy(awsiam.NewPolicyStatement(&awsiam.PolicyStatementProps{
 		Actions:   jsii.Strings("ecr:PutImage"),
 		Effect:    awsiam.Effect_ALLOW,
-		Resources: jsii.Strings(*repository.RepositoryArn(), fmt.Sprintf("%s/*", *repository.RepositoryArn())),
+		Resources: jsii.Strings(fmt.Sprintf("%s*", *repository.RepositoryArn())),
 	}))
 	buildRole.AddToPolicy(awsiam.NewPolicyStatement(&awsiam.PolicyStatementProps{
 		Actions:   jsii.Strings("ecr:GetAuthorizationToken"),
