@@ -22,7 +22,6 @@ func CreateEKS(scope constructs.Construct, config *configs.Config, vpc awsec2.Vp
 			SubnetType: awsec2.SubnetType_PRIVATE_WITH_EGRESS,
 		},
 	}
-	id := "eks-cluster-id"
 	props := awseks.FargateClusterProps{
 		Version:      awseks.KubernetesVersion_Of(jsii.String(config.Cluster.K8SVersion)),
 		KubectlLayer: kubectl.NewKubectlLayer(scope, jsii.String("id-kubectl-layer")),
@@ -35,7 +34,7 @@ func CreateEKS(scope constructs.Construct, config *configs.Config, vpc awsec2.Vp
 		},
 	}
 
-	cluster := awseks.NewFargateCluster(scope, jsii.String(id), &props)
+	cluster := awseks.NewFargateCluster(scope, jsii.String("eks-cluster-id"), &props)
 
 	appName := jsii.String(config.Cluster.App.Name)
 
