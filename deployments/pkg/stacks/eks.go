@@ -106,13 +106,8 @@ func CreateEKS(scope constructs.Construct, config *configs.Config, vpc awsec2.Vp
 		"kind":       jsii.String("Service"),
 		"metadata": map[string]interface{}{
 			"name": jsii.String("service"),
-			"annotations": map[string]*string{
-				"service.beta.kubernetes.io/aws-load-balancer-type":            jsii.String("external"),
-				"service.beta.kubernetes.io/aws-load-balancer-nlb-target-type": jsii.String("ip"),
-			},
 		},
 		"spec": map[string]interface{}{
-			"type": jsii.String("LoadBalancer"),
 			"selector": map[string]*string{
 				"app": appName,
 			},
@@ -121,6 +116,43 @@ func CreateEKS(scope constructs.Construct, config *configs.Config, vpc awsec2.Vp
 					"protocol":   jsii.String("TCP"),
 					"port":       jsii.Number(80),
 					"targetPort": jsii.Number(80),
+				},
+			},
+		},
+	})
+
+	cluster.AddManifest(jsii.String("id-ingress-manifest"), &map[string]interface{}{
+		"apiVersion": jsii.String("networking.k8s.io/v1"),
+		"kind":       jsii.String("Ingress"),
+		"metadata": map[string]interface{}{
+			"name": jsii.String("ingress"),
+			"annotations": map[string]*string{
+				"kubernetes.io/ingress.class":           jsii.String("alb"),
+				"alb.ingress.kubernetes.io/scheme":      jsii.String("internet-facing"),
+				"alb.ingress.kubernetes.io/target-type": jsii.String("ip"),
+			},
+			"labels": map[string]*string{
+				"app": jsii.String("ingress"),
+			},
+		},
+		"spec": map[string]interface{}{
+			"rules": []map[string]interface{}{
+				{
+					"http": map[string]interface{}{
+						"paths": []map[string]interface{}{
+							{
+								"path": "/*",
+								"backend": map[string]interface{}{
+									"service": map[string]interface{}{
+										"name": jsii.String("service"),
+										"port": map[string]interface{}{
+											"number": jsii.Number(80),
+										},
+									},
+								},
+							},
+						},
+					},
 				},
 			},
 		},
