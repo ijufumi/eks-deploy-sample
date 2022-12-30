@@ -64,7 +64,7 @@ func CreateCodepipeline(scope constructs.Construct, config *configs.Config, buck
 	buildRole.AddToPolicy(awsiam.NewPolicyStatement(&awsiam.PolicyStatementProps{
 		Actions:   jsii.Strings("ecr:GetAuthorizationToken"),
 		Effect:    awsiam.Effect_ALLOW,
-		Resources: jsii.Strings(fmt.Sprintf("arn:aws:ecr:%s:%s:repository/*", *config.GetAwsRegion(), *config.GetAwsAccountID())),
+		Resources: jsii.Strings("*"),
 	}))
 	buildRole.AddToPolicy(awsiam.NewPolicyStatement(&awsiam.PolicyStatementProps{
 		Actions:   jsii.Strings("eks:DescribeCluster"),
