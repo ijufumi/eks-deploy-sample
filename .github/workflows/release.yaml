@@ -4,7 +4,7 @@ on:
     types: [published]
 
 env:
-  PIPELINE_ENDPOINT: https://xlm6ojsiczubzkpcrzyeasnjdm0zyvwp.lambda-url.ap-northeast-1.on.aws/
+  PIPELINE_ENDPOINT: input_your_endpoint_url
 jobs:
   pipeline:
     name: release
