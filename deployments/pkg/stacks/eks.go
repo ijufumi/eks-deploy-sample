@@ -141,7 +141,8 @@ func CreateEKS(scope constructs.Construct, config *configs.Config, vpc awsec2.Vp
 					"http": map[string]interface{}{
 						"paths": []map[string]interface{}{
 							{
-								"path": "/*",
+								"path":     "/",
+								"pathType": jsii.String("Prefix"),
 								"backend": map[string]interface{}{
 									"service": map[string]interface{}{
 										"name": jsii.String("service"),
