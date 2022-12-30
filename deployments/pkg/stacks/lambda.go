@@ -60,8 +60,7 @@ func CreateLambda(scope constructs.Construct, config *configs.Config, s3 awss3.I
 		Role:    role,
 	}
 
-	id := jsii.String("id-lambda")
-	lambdaFunction := awslambda.NewDockerImageFunction(scope, id, props)
+	lambdaFunction := awslambda.NewDockerImageFunction(scope, jsii.String("id-lambda"), props)
 	lambdaFunction.AddFunctionUrl(&awslambda.FunctionUrlOptions{
 		AuthType: awslambda.FunctionUrlAuthType_NONE,
 	})
