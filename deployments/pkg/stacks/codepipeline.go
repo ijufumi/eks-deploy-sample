@@ -57,9 +57,9 @@ func CreateCodepipeline(scope constructs.Construct, config *configs.Config, buck
 	})
 
 	buildRole.AddToPolicy(awsiam.NewPolicyStatement(&awsiam.PolicyStatementProps{
-		Actions:   jsii.Strings("ecr:PutImage"),
+		Actions:   jsii.Strings("ecr:PutImage", "ecr:CompleteLayerUpload", "ecr:UploadLayerPart", "ecr:InitiateLayerUpload", "ecr:BatchCheckLayerAvailability"),
 		Effect:    awsiam.Effect_ALLOW,
-		Resources: jsii.Strings(fmt.Sprintf("%s*", *repository.RepositoryArn())),
+		Resources: jsii.Strings(*repository.RepositoryArn()),
 	}))
 	buildRole.AddToPolicy(awsiam.NewPolicyStatement(&awsiam.PolicyStatementProps{
 		Actions:   jsii.Strings("ecr:GetAuthorizationToken"),
