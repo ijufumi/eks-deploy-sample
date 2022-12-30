@@ -66,7 +66,6 @@ brew install aws-cdk
 
 | 項目 | 説明 |
 | ---- | ---- |
-| `AWS_ACCOUNT_ID` | `ECR` の名前解決に使う `AWS_ACCOUNT_ID` |
 | `VPC_CIDR_BLOCK` | `VPC` に設定する `CIDR` |
 | `VPC_NAME` | `VPC` に設定する名前 |
 | `REPOSITORY_NAME` | `ECR` の名前 |
